@@ -4,7 +4,6 @@ import ErrorSetConnection from "./components/ErrorSetConnection";
 import SetConnection from "./components/SetConnection";
 import TitleBar from "./components/TitleBar";
 import WaitingForConnection from "./components/WaitingForConnection";
-import webservice from "./shared/webservice";
 
 function App() {
     // debugger;
