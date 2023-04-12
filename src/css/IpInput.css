@@ -1,0 +1,42 @@
+.ipInput {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ipInput-form {
+    align-items: center;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.561);
+}
+
+.ipInput-form-textEntry {
+    margin-left: 10px;
+    border: none;
+    -webkit-appearance: none;
+    -ms-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: #100f0f;
+    color:rgba(255, 255, 255, 0.561);
+    padding: 12px;
+    border-radius: 3px;
+    width: 200px;
+    font-size: 20px;
+    text-align: center;
+    border: transparent solid 1px;
+}
+
+.ipInput-form-textEntry:focus{
+    outline-width: 0;
+}
+
+.ipInput-form-textEntry:invalid {
+    border: rgba(146, 34, 34, 0.656) solid 1px;
+}
+
+.ipInput-errorMessage {
+    color:rgb(146, 34, 34);
+    font-weight: bold;
+    padding-top: 10px;
+}
