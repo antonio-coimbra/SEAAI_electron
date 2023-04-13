@@ -71,29 +71,28 @@ ipcMain.on(channels.SET_FULLSCREEN, () => {
   getMainWindow().setFullScreen(true);
 });
 
-
-
 // User entered the IP address
-ipcMain.handle("get-ip", function (event, value) {
-  console.log(`entered IP address: ${value}`);
+ipcMain.handle("get-ip", function (event, ipaddress) {
+  console.log(`entered IP address: ${ipaddress}`);
   const mainWindow = getMainWindow();
-  const appBrowserView = getAppBrowserView();
-
-
 
   mainWindow.webContents.send(channels.APP_STATE, "connecting");
 
   // Server comunication
-//  request("http://localhost:8080/isthissentry", value, loadSentry);
-  loadSentry(mainWindow, appBrowserView, value)
-  
+  request(ipaddress, loadSentry, connectionError);
 });
 
-function loadSentry(mainWindow, appBrowserView, value) {
+function connectionError() {
+  const mainWindow = getMainWindow();
+
+  mainWindow.webContents.send(channels.APP_STATE, "error");
+}
+
+function loadSentry(ipaddress) {
   let SUCCESS = true;
 
-
-  
+  const mainWindow = getMainWindow();
+  const appBrowserView = getAppBrowserView();
 
   appBrowserView.webContents.once("did-finish-load", () => {
     if (SUCCESS) {
@@ -126,11 +125,7 @@ function loadSentry(mainWindow, appBrowserView, value) {
     return;
   });
 
-  console.log(`Loading http://${value}/`);
-  appBrowserView.webContents
-        .loadURL(`http://${value}/`)
-        .then((result) => {
-          console.log(result)
-        })
-        .catch((err) => {console.log(err)});
+  const url = `http://${ipaddress}/?${Date.now()}`;
+  console.log(url);
+  appBrowserView.webContents.loadURL(url);
 }
