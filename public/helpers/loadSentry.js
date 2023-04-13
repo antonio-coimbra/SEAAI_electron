@@ -1,6 +1,6 @@
 const { channels } = require("../../src/shared/constants");
 const { setViewBounds } = require("../helpers/utils");
-const { getMainWindow, getAppBrowserView } = require("../helpers/window");
+const { getMainWindow, getAppBrowserView } = require("./appStart");
 
 function loadSentry(ipaddress) {
     // The SUCCESS variable is needed because even when the app fails to load,

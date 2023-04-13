@@ -1,5 +1,6 @@
-const { BrowserWindow, BrowserView } = require("electron");
+const { BrowserWindow, BrowserView, ipcMain } = require("electron");
 const { preloadScriptPath, iconPath, setViewBounds } = require("./utils");
+const { channels } = require("../../src/shared/constants");
 
 let mainWindow;
 let appBrowserView;
@@ -14,7 +15,6 @@ function startAplication() {
         minHeight: 495,
         titleBarStyle: "hidden",
         show: false,
-        backgroundColor: "rgb(47, 47, 47)",
         icon: iconPath,
         webPreferences: {
             contextIsolation: true,
@@ -50,6 +50,21 @@ function startAplication() {
     mainWindow.once("focus", () => mainWindow.flashFrame(false));
 }
 
+// Top bar close button handling
+ipcMain.handle(channels.CLOSE, () => {
+    mainWindow.close();
+});
+
+// Top bar minimize button handling
+ipcMain.handle(channels.MINIMIZE, () => {
+    mainWindow.minimize();
+});
+
+// Top bar maximize button handling
+ipcMain.handle(channels.MAXIMIZE, () => {
+    mainWindow.isMaximized() ? mainWindow.restore() : mainWindow.maximize();
+});
+
 function getMainWindow() {
     return mainWindow;
 }
@@ -58,7 +73,7 @@ function getAppBrowserView() {
 }
 
 function autoResize() {
-    if (getAppBrowserView().getBounds().width !== 0) {
+    if (appBrowserView.getBounds().width !== 0) {
         setViewBounds(mainWindow, appBrowserView);
     }
 }

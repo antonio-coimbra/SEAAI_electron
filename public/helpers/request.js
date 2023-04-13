@@ -1,6 +1,6 @@
 const { net } = require("electron");
 const { loadSentry } = require("./loadSentry");
-const { getMainWindow } = require("../helpers/window");
+const { getMainWindow } = require("./appStart");
 const {
     channels,
     TEST_SERVER_URL,

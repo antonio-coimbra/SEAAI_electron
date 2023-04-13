@@ -1,7 +1,7 @@
 const { app, ipcMain, BrowserWindow } = require("electron");
 const { request } = require("./helpers/request");
 const { channels } = require("../src/shared/constants");
-const { startAplication, getMainWindow } = require("./helpers/window");
+const { startAplication, getMainWindow } = require("./helpers/appStart");
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -20,23 +20,6 @@ app.on("window-all-closed", () => {
 
 app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) startAplication();
-});
-
-// Top bar close button handling
-ipcMain.handle(channels.CLOSE, () => {
-    app.quit();
-});
-
-// Top bar minimize button handling
-ipcMain.handle(channels.MINIMIZE, () => {
-    getMainWindow().minimize();
-});
-
-// Top bar maximize button handling
-ipcMain.handle(channels.MAXIMIZE, () => {
-    getMainWindow().isMaximized()
-        ? getMainWindow().restore()
-        : getMainWindow().maximize();
 });
 
 // (Not implemented) fullscreen button/shortcut handling
