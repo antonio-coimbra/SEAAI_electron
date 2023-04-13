@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../css/IpInput.css";
-import ConnectButton from "./ConnectButton";
+import StandardButton from "./StandardButton";
 const { regEx } = require("../shared/constants");
 
 function IpInput() {
@@ -42,7 +42,7 @@ function IpInput() {
             <div className="ipInput-errorMessage">
                 {subFailed && !valid ? "Please insert a valid IP address" : ""}
             </div>
-            <ConnectButton />
+            <StandardButton type="submit">CONNECT</StandardButton>
         </form>
     );
 }

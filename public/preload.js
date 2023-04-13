@@ -2,17 +2,19 @@ const { channels } = require("../src/shared/constants");
 const { contextBridge, ipcRenderer } = require("electron");
 
 const API = {
-  getIP: (input) => ipcRenderer.invoke("get-ip", input),
-  getAppState: (setAppState) =>
-    ipcRenderer.on(channels.APP_STATE, (event, appState) => {
-      setAppState(appState);
-    }),
-  frame: {
-    minimize: () => ipcRenderer.send(channels.MINIMIZE),
-    maximize: () => ipcRenderer.send(channels.MAXIMIZE),
-    close: () => ipcRenderer.send(channels.CLOSE),
-    setFullScreen: () => ipcRenderer.send(channels.SET_FULLSCREEN),
-  },
+    getIP: (input) => ipcRenderer.invoke(channels.GET_IP, input),
+    autoConnection: () => ipcRenderer.invoke(channels.AUTO_CONNECT),
+    frame: {
+        minimize: () => ipcRenderer.invoke(channels.MINIMIZE),
+        maximize: () => ipcRenderer.invoke(channels.MAXIMIZE),
+        close: () => ipcRenderer.invoke(channels.CLOSE),
+        setFullScreen: () => ipcRenderer.invoke(channels.SET_FULLSCREEN),
+    },
+
+    getAppState: (setAppState) =>
+        ipcRenderer.on(channels.APP_STATE, (event, appState) => {
+            setAppState(appState);
+        }),
 };
 
 contextBridge.exposeInMainWorld("api", API);

@@ -1,4 +1,4 @@
-.connectButton {
+.StandardButton {
     margin-top: 25px;
     background-color: #fff;
     border: 0 solid #e2e8f0;
@@ -20,7 +20,7 @@
     touch-action: manipulation;
 }
 
-.connectButton:hover {
+.StandardButton:hover {
     background-color: rgb(29, 29, 29);
     color: rgb(255, 255, 255);
 }
