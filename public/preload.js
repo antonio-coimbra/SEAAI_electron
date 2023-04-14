@@ -2,7 +2,7 @@ const { channels } = require("../src/shared/constants");
 const { contextBridge, ipcRenderer } = require("electron");
 
 const API = {
-    getIP: (input) => ipcRenderer.invoke(channels.GET_IP, input),
+    sendIP: (input) => ipcRenderer.invoke(channels.SEND_IP, input),
     autoConnection: () => ipcRenderer.invoke(channels.AUTO_CONNECT),
     frame: {
         minimize: () => ipcRenderer.invoke(channels.MINIMIZE),

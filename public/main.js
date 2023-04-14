@@ -1,7 +1,7 @@
 const { app, ipcMain, BrowserWindow } = require("electron");
+const { startAplication, getMainWindow } = require("./helpers/appStart");
 const { request } = require("./helpers/request");
 const { channels } = require("../src/shared/constants");
-const { startAplication, getMainWindow } = require("./helpers/appStart");
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -22,13 +22,8 @@ app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) startAplication();
 });
 
-// (Not implemented) fullscreen button/shortcut handling
-ipcMain.handle(channels.SET_FULLSCREEN, () => {
-    getMainWindow().setFullScreen(true);
-});
-
 // User entered the IP address
-ipcMain.handle(channels.GET_IP, function (event, ipaddress) {
+ipcMain.handle(channels.SEND_IP, (event, ipaddress) => {
     console.log(`entered IP address: ${ipaddress}`);
     const mainWindow = getMainWindow();
 
@@ -36,4 +31,8 @@ ipcMain.handle(channels.GET_IP, function (event, ipaddress) {
 
     // Check if the IP address is from a SENTRY unit
     request(ipaddress);
+});
+
+ipcMain.handle(channels.AUTO_CONNECT, () => {
+    console.log("auto-connecting started");
 });

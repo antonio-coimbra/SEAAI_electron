@@ -1,6 +1,10 @@
+const {
+    getMainWindow,
+    getAppBrowserView,
+    setViewBounds,
+    BROWSER_VIEW_INIT,
+} = require("./appStart");
 const { channels } = require("../../src/shared/constants");
-const { setViewBounds } = require("../helpers/utils");
-const { getMainWindow, getAppBrowserView } = require("./appStart");
 
 function loadSentry(ipaddress) {
     // The SUCCESS variable is needed because even when the app fails to load,
@@ -16,7 +20,7 @@ function loadSentry(ipaddress) {
             // If the IP address is valid, render only the TitleBar component
             mainWindow.webContents.send(channels.APP_STATE, "normal-view");
             mainWindow.maximize();
-            setViewBounds(mainWindow, appBrowserView);
+            setViewBounds(BROWSER_VIEW_INIT);
         }
         mainWindow.show();
         return;
@@ -40,10 +44,10 @@ function loadSentry(ipaddress) {
         return;
     });
 
-    const url = `http://${ipaddress}/?${Date.now()}`;
-    appBrowserView.webContents.loadURL(url);
+    // const url = `http://${ipaddress}/?${Date.now()}`;
+    appBrowserView.webContents.loadURL("https://www.google.com");
     return;
-    // mainWindow.webContents.loadURL(url);
+    // mainWindow.webContents.loadURL(url); // appears to be usefull because it shows more info in the dev tools
 }
 
 module.exports = { loadSentry };

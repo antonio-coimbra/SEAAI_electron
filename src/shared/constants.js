@@ -5,7 +5,7 @@ const SENTRY_RESPONSE = "iamsentry";
 
 module.exports = {
     channels: {
-        GET_IP: "get-ip",
+        SEND_IP: "send-ip",
         APP_STATE: "app_state",
         MINIMIZE: "app-minimize",
         MAXIMIZE: "app-maximize",

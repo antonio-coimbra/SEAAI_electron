@@ -22,7 +22,7 @@ function IpInput() {
         if (valid) {
             setSubFailed(false);
             console.log(`Submited IP: ${input}`);
-            window.api.getIP(input);
+            window.api.sendIP(input);
         }
     }
 
