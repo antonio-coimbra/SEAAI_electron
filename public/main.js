@@ -1,6 +1,7 @@
 const { app, ipcMain, BrowserWindow } = require("electron");
 const { startAplication, getMainWindow } = require("./helpers/appStart");
 const { request } = require("./helpers/request");
+const { zeroconf } = require("./helpers/zeroconf");
 const { channels } = require("../src/shared/constants");
 
 // This method will be called when Electron has finished
@@ -34,5 +35,8 @@ ipcMain.handle(channels.SEND_IP, (event, ipaddress) => {
 });
 
 ipcMain.handle(channels.AUTO_CONNECT, () => {
-    console.log("auto-connecting started");
+    setTimeout(() => {
+        console.log("auto-connecting started");
+        zeroconf();
+    }, 3000);
 });

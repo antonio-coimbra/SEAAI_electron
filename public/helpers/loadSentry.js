@@ -44,8 +44,8 @@ function loadSentry(ipaddress) {
         return;
     });
 
-    // const url = `http://${ipaddress}/?${Date.now()}`;
-    appBrowserView.webContents.loadURL("https://www.google.com");
+    const url = `http://${ipaddress}/?${Date.now()}`;
+    appBrowserView.webContents.loadURL(url);
     return;
     // mainWindow.webContents.loadURL(url); // appears to be usefull because it shows more info in the dev tools
 }
