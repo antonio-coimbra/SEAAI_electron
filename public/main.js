@@ -1,4 +1,4 @@
-const { app, ipcMain, BrowserWindow } = require("electron");
+const { app, ipcMain, BrowserWindow, net } = require("electron");
 const { startAplication, getMainWindow } = require("./helpers/appStart");
 const { zeroconf } = require("./helpers/zeroconf");
 const { channels, appStates } = require("../src/shared/constants");
@@ -28,11 +28,16 @@ app.on("activate", () => {
 ipcMain.handle(channels.SEND_IP, (event, ipaddress) => {
     console.log(`entered IP address: ${ipaddress}`);
     const mainWindow = getMainWindow();
-
     mainWindow.webContents.send(channels.APP_STATE, appStates.CONNECTING_STATE);
 
-    // Check if the IP address is from a SENTRY and connect
-    isThisSentry(ipaddress, simpleLoadSentry);
+    // Check if there is internet connection
+    if (!net.isOnline()) {
+        console.log("No internet connection");
+        getMainWindow.webContents.send(
+            channels.APP_STATE,
+            appStates.ERROR_STATE
+        );
+    } else isThisSentry(ipaddress, simpleLoadSentry);
 });
 
 ipcMain.handle(channels.AUTO_CONNECT, () => {
@@ -40,5 +45,13 @@ ipcMain.handle(channels.AUTO_CONNECT, () => {
     //     console.log("auto-connecting started");
     //     zeroconf();
     // }, 3000);
-    zeroconf();
+
+    // Check if there is internet connection
+    if (!net.isOnline()) {
+        console.log("No internet connection");
+        getMainWindow.webContents.send(
+            channels.APP_STATE,
+            appStates.ERROR_STATE
+        );
+    } else zeroconf(getMainWindow());
 });

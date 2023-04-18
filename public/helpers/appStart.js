@@ -1,12 +1,22 @@
-const { BrowserWindow, BrowserView, ipcMain } = require("electron");
-const { channels } = require("../../src/shared/constants");
+const {
+    BrowserWindow,
+    BrowserView,
+    ipcMain,
+    net,
+    globalShortcut,
+} = require("electron");
+const {
+    channels,
+    appStates,
+    SET_FULLSCREEN,
+    BROWSER_VIEW_INIT,
+} = require("../../src/shared/constants");
 
 const path = require("path");
 const preloadScriptPath = path.join(__dirname, "../preload.js");
 const iconPath = path.join(__dirname, "./favion.ico");
 
 const TITLE_BAR_HEIGHT = 35;
-const BROWSER_VIEW_INIT = "browser-view-init";
 
 let mainWindow;
 let appBrowserView;
@@ -54,18 +64,63 @@ function startAplication() {
         setViewBounds();
     });
     mainWindow.once("focus", () => mainWindow.flashFrame(false));
+
+    globalShortcut.register("F11", () => {
+        const browserViewActive =
+            appBrowserView.getBounds().width !== 0 ||
+            appBrowserView.getBounds().height !== 0;
+
+        // Fullscreen mode is only available when the app is connected
+        if (browserViewActive) {
+            mainWindow.setFullScreen(!mainWindow.isFullScreen());
+            if (browserViewActive && mainWindow.isFullScreen()) {
+                setViewBounds(SET_FULLSCREEN);
+            } else if (browserViewActive && !mainWindow.isFullScreen()) {
+                setViewBounds();
+            }
+        }
+    });
 }
 
 function setViewBounds(option) {
     const bounds = mainWindow.getBounds();
     const browserViewActive = appBrowserView.getBounds().width !== 0;
-    if (browserViewActive || option === BROWSER_VIEW_INIT) {
-        appBrowserView.setBounds({
-            x: 0,
-            y: TITLE_BAR_HEIGHT,
-            width: bounds.width,
-            height: bounds.height - TITLE_BAR_HEIGHT,
-        });
+    switch (option) {
+        default:
+            if (browserViewActive) {
+                appBrowserView.setBounds({
+                    x: 0,
+                    y: TITLE_BAR_HEIGHT,
+                    width: bounds.width,
+                    height: bounds.height - TITLE_BAR_HEIGHT,
+                });
+            }
+            break;
+        case BROWSER_VIEW_INIT:
+            appBrowserView.setBounds({
+                x: 0,
+                y: TITLE_BAR_HEIGHT,
+                width: bounds.width,
+                height: bounds.height - TITLE_BAR_HEIGHT,
+            });
+
+            break;
+        case SET_FULLSCREEN:
+            appBrowserView.setBounds({
+                x: 0,
+                y: 0,
+                width: bounds.width,
+                height: bounds.height,
+            });
+
+            break;
+    }
+}
+
+function checkConnection() {
+    if (!net.isOnline) {
+        console.log("No internet connection");
+        mainWindow.webContents.send(channels.APP_STATE, appStates.ERROR_STATE);
     }
 }
 
@@ -84,7 +139,7 @@ ipcMain.handle(channels.MAXIMIZE, () => {
     mainWindow.isMaximized() ? mainWindow.restore() : mainWindow.maximize();
 });
 
-// (Not implemented) fullscreen button/shortcut handling
+// (Not implemented) fullscreen button handling
 ipcMain.handle(channels.SET_FULLSCREEN, () => {
     const bounds = mainWindow.getBounds();
     const browserViewActive =
@@ -118,6 +173,7 @@ function getAppBrowserView() {
 module.exports = {
     startAplication,
     setViewBounds,
+    checkConnection,
     getMainWindow,
     getAppBrowserView,
     BROWSER_VIEW_INIT,

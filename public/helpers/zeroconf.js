@@ -1,6 +1,20 @@
 const { isThisSentryRecursive } = require("./isThisSentry");
 const { recursiveLoadSentry } = require("./loadSentry");
+const { ipcMain } = require("electron");
+const { channels, appStates } = require("../../src/shared/constants");
 const mdns = require("multicast-dns")();
+
+let res = 0;
+let appIsConnected = false;
+
+function onError(mainWindow) {
+    // go to error page and manual ip insertion
+    mdns.destroy();
+    mainWindow.webContents.send(
+        channels.APP_STATE,
+        appStates.ERROR_AUTO_CONNECTION_STATE
+    );
+}
 
 function recursiveIPCheck(response, i) {
     if (i < response.answers.length) {
@@ -10,8 +24,7 @@ function recursiveIPCheck(response, i) {
                     ? response.answers[i].data
                     : null
                 : null;
-            console.log("zeroconf:");
-            console.log(ipFromZeroConf);
+            console.log(`zeroconf: ${ipFromZeroConf}`);
             return isThisSentryRecursive(
                 ipFromZeroConf,
                 recursiveLoadSentry,
@@ -19,19 +32,22 @@ function recursiveIPCheck(response, i) {
                 response,
                 recursiveIPCheck
             );
-        } else return null;
-    } else return null;
+        } else return -1;
+    } else return -1;
 }
 
-function zeroconf() {
+function zeroconf(mainWindow) {
     mdns.on("response", function (response) {
         mdns.destroy(); // closes the socket
         let i = 0;
-        let res = recursiveIPCheck(response, i);
+        res = recursiveIPCheck(response, i);
         console.log(`recursiveIPCheck result: ${res}`);
-        if (res === null) {
+        if (res === -1 || res === null) {
             console.log(`recursiveIPCheck FAILED`);
-            // go to error page and manual ip insertion
+            onError(mainWindow);
+        } else if (res === 0) {
+            console.log(`recursiveIPCheck didn't return`);
+            onError(mainWindow);
         }
     });
 
@@ -43,6 +59,24 @@ function zeroconf() {
             },
         ],
     });
+
+    // close the connection after 3 seconds
+    // Send app to insert ip state
+    setTimeout(() => {
+        if (!appIsConnected) {
+            console.log("auto connect timeout");
+            onError(mainWindow);
+        }
+    }, 10000);
 }
+
+ipcMain.handle(channels.CANCEL_AUTO_CONNECT, () => {
+    console.log("canceled auto connect");
+    mdns.destroy();
+});
+
+ipcMain.on(channels.ELECTRON_APP_STATE, (event, appState) => {
+    appIsConnected = appState === appStates.CONNECTED ? true : false;
+});
 
 module.exports = { zeroconf };

@@ -4,6 +4,8 @@ const { contextBridge, ipcRenderer } = require("electron");
 const API = {
     sendIP: (input) => ipcRenderer.invoke(channels.SEND_IP, input),
     autoConnection: () => ipcRenderer.invoke(channels.AUTO_CONNECT),
+    cancelAutoConnection: () =>
+        ipcRenderer.invoke(channels.CANCEL_AUTO_CONNECT),
     frame: {
         minimize: () => ipcRenderer.invoke(channels.MINIMIZE),
         maximize: () => ipcRenderer.invoke(channels.MAXIMIZE),
@@ -14,6 +16,7 @@ const API = {
     getAppState: (setAppState) =>
         ipcRenderer.on(channels.APP_STATE, (event, appState) => {
             setAppState(appState);
+            ipcRenderer.send(channels.ELECTRON_APP_STATE, appState);
         }),
 };
 

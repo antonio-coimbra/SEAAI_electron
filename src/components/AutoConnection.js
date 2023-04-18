@@ -8,6 +8,7 @@ function AutoConnection({ setAppState }) {
     // function goToSetConnection() {
     //     setAppState("select-ip");
     //     // TODO: this should cancel the auto connection process
+    //     window.api.cancelAutoConnection();
     // }
 
     useEffect(() => {

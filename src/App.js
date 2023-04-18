@@ -5,6 +5,7 @@ import AutoConnection from "./components/AutoConnection";
 import SetConnection from "./components/SetConnection";
 import WaitingForConnection from "./components/WaitingForConnection";
 import ErrorSetConnection from "./components/ErrorSetConnection";
+import AutoConnectionError from "./components/AutoConnectionError";
 
 function App() {
     // debugger;
@@ -15,7 +16,6 @@ function App() {
         window.api.getAppState(setAppState);
     }, []);
 
-    // webservice();
     return (
         <div className="App">
             <TitleBar />
@@ -27,6 +27,9 @@ function App() {
             )}
             {appState === appStates.SELECT_IP_STATE && <SetConnection />}
             {appState === appStates.ERROR_STATE && <ErrorSetConnection />}
+            {appState === appStates.ERROR_AUTO_CONNECTION_STATE && (
+                <AutoConnectionError />
+            )}
         </div>
     );
 }
