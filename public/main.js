@@ -1,8 +1,9 @@
 const { app, ipcMain, BrowserWindow } = require("electron");
 const { startAplication, getMainWindow } = require("./helpers/appStart");
-const { request } = require("./helpers/request");
 const { zeroconf } = require("./helpers/zeroconf");
-const { channels } = require("../src/shared/constants");
+const { channels, appStates } = require("../src/shared/constants");
+const { isThisSentry } = require("./helpers/isThisSentry");
+const { simpleLoadSentry } = require("./helpers/loadSentry");
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -28,15 +29,16 @@ ipcMain.handle(channels.SEND_IP, (event, ipaddress) => {
     console.log(`entered IP address: ${ipaddress}`);
     const mainWindow = getMainWindow();
 
-    mainWindow.webContents.send(channels.APP_STATE, "connecting");
+    mainWindow.webContents.send(channels.APP_STATE, appStates.CONNECTING_STATE);
 
-    // Check if the IP address is from a SENTRY unit
-    request(ipaddress);
+    // Check if the IP address is from a SENTRY and connect
+    isThisSentry(ipaddress, simpleLoadSentry);
 });
 
 ipcMain.handle(channels.AUTO_CONNECT, () => {
-    setTimeout(() => {
-        console.log("auto-connecting started");
-        zeroconf();
-    }, 3000);
+    // setTimeout(() => {
+    //     console.log("auto-connecting started");
+    //     zeroconf();
+    // }, 3000);
+    zeroconf();
 });

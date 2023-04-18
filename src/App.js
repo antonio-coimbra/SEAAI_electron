@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import { appStates } from "./shared/constants";
 import TitleBar from "./components/TitleBar";
 import AutoConnection from "./components/AutoConnection";
 import SetConnection from "./components/SetConnection";
@@ -8,7 +8,7 @@ import ErrorSetConnection from "./components/ErrorSetConnection";
 
 function App() {
     // debugger;
-    const [appState, setAppState] = useState("auto-connection");
+    const [appState, setAppState] = useState(appStates.AUTO_CONNECTION_STATE);
 
     useEffect(() => {
         // Listen for the event
@@ -19,14 +19,14 @@ function App() {
     return (
         <div className="App">
             <TitleBar />
-            {appState === "auto-connection" && (
+            {appState === appStates.AUTO_CONNECTION_STATE && (
                 <AutoConnection setAppState={setAppState} />
             )}
-            {appState === "connecting" && (
+            {appState === appStates.CONNECTING_STATE && (
                 <WaitingForConnection setAppState={setAppState} />
             )}
-            {appState === "select-ip" && <SetConnection />}
-            {appState === "error" && <ErrorSetConnection />}
+            {appState === appStates.SELECT_IP_STATE && <SetConnection />}
+            {appState === appStates.ERROR_STATE && <ErrorSetConnection />}
         </div>
     );
 }

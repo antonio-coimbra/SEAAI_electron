@@ -1,17 +1,17 @@
 import "../css/AutoConnection.css";
 import Title from "./Title";
-import StandardButton from "./StandardButton";
+// import StandardButton from "./StandardButton";
 
 import { useEffect } from "react";
 
 function AutoConnection({ setAppState }) {
-    function goToSetConnection() {
-        setAppState("select-ip");
-    }
+    // function goToSetConnection() {
+    //     setAppState("select-ip");
+    //     // TODO: this should cancel the auto connection process
+    // }
 
     useEffect(() => {
         // Connect automatically
-        console.log("connecting automatically");
         window.api.autoConnection();
     }, []);
 
@@ -21,12 +21,12 @@ function AutoConnection({ setAppState }) {
             <div className="autoConnection-message">
                 Connecting to SENTRY unit...
             </div>
-            <StandardButton
+            {/* <StandardButton
                 className="autoConnection-goToSetConnectionButton"
                 onClick={goToSetConnection}
             >
                 CONNECT MANUALLY
-            </StandardButton>
+            </StandardButton> */}
         </div>
     );
 }
