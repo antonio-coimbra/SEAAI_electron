@@ -1,10 +1,19 @@
-const { app, ipcMain, BrowserWindow, net, protocol } = require("electron");
+const {
+    app,
+    ipcMain,
+    BrowserWindow,
+    net,
+    protocol,
+    Menu,
+} = require("electron");
 const { startAplication, getMainWindow } = require("./helpers/appStart");
 const { zeroconf } = require("./helpers/zeroconf");
 const { channels, appStates } = require("../src/shared/constants");
 const { isThisSentry } = require("./helpers/isThisSentry");
 const { simpleLoadSentry } = require("./helpers/loadSentry");
 const path = require("path");
+
+// Menu.setApplicationMenu(null);
 
 // Setup a local proxy to adjust the paths of requested files when loading
 // them from the local production bundle (e.g.: local fonts, etc...).

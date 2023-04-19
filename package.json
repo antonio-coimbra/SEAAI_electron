@@ -12,6 +12,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "cross-env": "^7.0.3",
+    "electron-squirrel-startup": "^1.0.0",
     "multicast-dns": "^7.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -21,17 +22,23 @@
   "title": "SEA.AI Sentry",
   "homepage": "./",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "electron-forge start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"wait-on http://192.168.56.1:3000 && electronmon .\"",
-    "electron-package-win": "npm run build && electron-builder -w -c.extraMetadata.main=build/electron.js"
+    "dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"wait-on tcp:3000 && electronmon .\"",
+    "electron-package-win": "npm run build && electron-builder -w -c.extraMetadata.main=build/electron.js",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "build": {
-    "appId": "com.electron.sentry",
-    "productName": "Electron-React SEA.AI Sentry",
-    "files": ["build/**/*", "node_modules/**/*"],
+    "appId": "com.sea.ai.sentry",
+    "productName": "SEA.AI Sentry",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*",
+      "src/shared/constants.js"
+    ],
     "directories": {
       "buildResources": "public"
     },
@@ -60,11 +67,15 @@
     ]
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.1.1",
+    "@electron-forge/maker-deb": "^6.1.1",
+    "@electron-forge/maker-rpm": "^6.1.1",
+    "@electron-forge/maker-squirrel": "^6.1.1",
+    "@electron-forge/maker-zip": "^6.1.1",
     "concurrently": "^8.0.1",
     "electron": "^24.0.0",
     "electron-is-dev": "^2.0.0",
-    "wait-on": "^7.0.1",
-    "electron-builder": "^23.6.0",
-    "electronmon": "^2.0.2"
+    "electronmon": "^2.0.2",
+    "wait-on": "^7.0.1"
   }
 }
