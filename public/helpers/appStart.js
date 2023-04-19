@@ -4,6 +4,7 @@ const {
     ipcMain,
     net,
     globalShortcut,
+    app,
 } = require("electron");
 const {
     channels,
@@ -13,6 +14,7 @@ const {
 } = require("../../src/shared/constants");
 
 const path = require("path");
+const url = require("url");
 const preloadScriptPath = path.join(__dirname, "../preload.js");
 const iconPath = path.join(__dirname, "./favion.ico");
 
@@ -22,7 +24,6 @@ let mainWindow;
 let appBrowserView;
 
 function startAplication() {
-    const isDev = true;
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 950,
@@ -44,12 +45,22 @@ function startAplication() {
 
     // and load the index.html of the app.
     // win.loadFile("index.html");
-    mainWindow.loadURL("http://localhost:3000").then(() => {
-        mainWindow.show();
-    });
 
-    if (isDev) {
-        mainWindow.webContents.openDevTools({ mode: "detach" });
+    // In production, set the initial browser path to the local bundle generated
+    // by the Create React App build process.
+    // In development, set it to localhost to allow live/hot-reloading.
+    const appURL = app.isPackaged
+        ? url.format({
+              pathname: path.join(__dirname, "index.html"),
+              protocol: "file:",
+              slashes: true,
+          })
+        : "http://localhost:3000";
+    mainWindow.loadURL(appURL).then(() => mainWindow.show());
+
+    // Automatically open Chrome's DevTools in development mode.
+    if (!app.isPackaged) {
+        mainWindow.webContents.openDevTools();
     }
 
     // Catch the window "move", "resize" and "close" events
@@ -141,24 +152,16 @@ ipcMain.handle(channels.MAXIMIZE, () => {
 
 // (Not implemented) fullscreen button handling
 ipcMain.handle(channels.SET_FULLSCREEN, () => {
-    const bounds = mainWindow.getBounds();
     const browserViewActive =
         appBrowserView.getBounds().width !== 0 ||
         appBrowserView.getBounds().height !== 0;
-    if (browserViewActive && mainWindow.isFullScreen()) {
-        appBrowserView.setBounds({
-            x: 0,
-            y: TITLE_BAR_HEIGHT,
-            width: bounds.width,
-            height: bounds.height - TITLE_BAR_HEIGHT,
-        });
-    } else if (browserViewActive && !mainWindow.isFullScreen()) {
-        appBrowserView.setBounds({
-            x: 0,
-            y: 0,
-            width: bounds.width,
-            height: bounds.height,
-        });
+    if (browserViewActive) {
+        mainWindow.setFullScreen(!mainWindow.isFullScreen());
+        if (browserViewActive && mainWindow.isFullScreen()) {
+            setViewBounds(SET_FULLSCREEN);
+        } else if (browserViewActive && !mainWindow.isFullScreen()) {
+            setViewBounds();
+        }
     }
     mainWindow.setFullScreen(!mainWindow.isFullScreen());
 });

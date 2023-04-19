@@ -1,9 +1,25 @@
-const { app, ipcMain, BrowserWindow, net } = require("electron");
+const { app, ipcMain, BrowserWindow, net, protocol } = require("electron");
 const { startAplication, getMainWindow } = require("./helpers/appStart");
 const { zeroconf } = require("./helpers/zeroconf");
 const { channels, appStates } = require("../src/shared/constants");
 const { isThisSentry } = require("./helpers/isThisSentry");
 const { simpleLoadSentry } = require("./helpers/loadSentry");
+const path = require("path");
+
+// Setup a local proxy to adjust the paths of requested files when loading
+// them from the local production bundle (e.g.: local fonts, etc...).
+function setupLocalFilesNormalizerProxy() {
+    protocol.registerHttpProtocol(
+        "file",
+        (request, callback) => {
+            const url = request.url.substr(8);
+            callback({ path: path.normalize(`${__dirname}/${url}`) });
+        },
+        (error) => {
+            if (error) console.error("Failed to register protocol");
+        }
+    );
+}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -11,6 +27,7 @@ const { simpleLoadSentry } = require("./helpers/loadSentry");
 app.whenReady().then(() => {
     // Create the browser window and initialize the appBrowserView
     startAplication();
+    setupLocalFilesNormalizerProxy();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -54,4 +71,18 @@ ipcMain.handle(channels.AUTO_CONNECT, () => {
             appStates.ERROR_STATE
         );
     } else zeroconf(getMainWindow());
+});
+
+// If your app has no need to navigate or only needs to navigate to known pages,
+// it is a good idea to limit navigation outright to that known scope,
+// disallowing any other kinds of navigation.
+const allowedNavigationDestinations = "https://sentry-electron-app.com";
+app.on("web-contents-created", (event, contents) => {
+    contents.on("will-navigate", (event, navigationUrl) => {
+        const parsedUrl = new URL(navigationUrl);
+
+        if (!allowedNavigationDestinations.includes(parsedUrl.origin)) {
+            event.preventDefault();
+        }
+    });
 });

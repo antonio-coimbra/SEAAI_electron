@@ -8,11 +8,10 @@ import ErrorSetConnection from "./components/ErrorSetConnection";
 import AutoConnectionError from "./components/AutoConnectionError";
 
 function App() {
-    // debugger;
     const [appState, setAppState] = useState(appStates.AUTO_CONNECTION_STATE);
 
     useEffect(() => {
-        // Listen for the event
+        // Listen for changes to the appState from ELECTRON
         window.api.getAppState(setAppState);
     }, []);
 

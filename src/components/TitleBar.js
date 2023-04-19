@@ -6,7 +6,6 @@ function TitleBar() {
     function minimize() {
         window.api.frame.minimize();
     }
-
     function maximize() {
         window.api.frame.maximize();
     }
