@@ -1,22 +1,25 @@
 const { isThisSentryRecursive } = require("./isThisSentry");
 const { recursiveLoadSentry } = require("./loadSentry");
+const { getMainWindow } = require("./appStart");
 const { ipcMain } = require("electron");
 const { channels, appStates } = require("../../src/shared/constants");
 const mdns = require("multicast-dns")();
 
 let res = 0;
 let appIsConnected = false;
+let stateInRec;
 
-function onError(mainWindow) {
+function onError() {
     // go to error page and manual ip insertion
     mdns.destroy();
-    mainWindow.webContents.send(
+    getMainWindow().webContents.send(
         channels.APP_STATE,
         appStates.ERROR_AUTO_CONNECTION_STATE
     );
 }
 
 function recursiveIPCheck(response, i) {
+    console.log("state in recursive iteration " + i + ": " + stateInRec);
     if (i < response.answers.length) {
         if (response.answers[i].name.includes("oscar.local") && response) {
             let ipFromZeroConf = response
@@ -75,8 +78,10 @@ ipcMain.handle(channels.CANCEL_AUTO_CONNECT, () => {
     mdns.destroy();
 });
 
-ipcMain.on(channels.ELECTRON_APP_STATE, (event, appState) => {
-    appIsConnected = appState === appStates.CONNECTED ? true : false;
+ipcMain.on(channels.ELECTRON_APP_STATE, (event, currentState) => {
+    console.log(`zeroconf app state: ${currentState}`);
+    if (currentState === appStates.ERROR_AUTO_CONNECTION_STATE) onError();
+    appIsConnected = currentState === appStates.CONNECTED ? true : false;
 });
 
 module.exports = { zeroconf };

@@ -25,7 +25,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"wait-on http://192.168.56.1:3000 && electronmon .\""
+    "dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000 && electronmon .\"",
+    "electron:package:mac": "npm run build && electron-builder -m -c.extraMetadata.main=build/electron.js",
+    "electron:package:win": "npm run build && electron-builder -w -c.extraMetadata.main=build/electron.js",
+    "electron:package:linux": "npm run build && electron-builder -l -c.extraMetadata.main=build/electron.js"
   },
   "eslintConfig": {
     "extends": [
@@ -47,5 +50,22 @@
     "electron-is-dev": "^2.0.0",
     "wait-on": "^7.0.1",
     "electronmon": "^2.0.2"
+  },
+  "build": {
+    "appId": "com.sea.ai.sentry",
+    "productName": "SEA.AI Sentry",
+    "files": ["build/**/*", "node_modules/**/*", "./src/shared/constants.js"],
+    "directories": {
+      "buildResources": "public"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "deb"
+    }
   }
 }

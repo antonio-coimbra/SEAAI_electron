@@ -28,6 +28,7 @@ function startAplication() {
         minWidth: 470,
         minHeight: 495,
         titleBarStyle: "hidden",
+        resizable: false,
         show: false,
         icon: path.join(__dirname, "./icon.ico"),
         webPreferences: {

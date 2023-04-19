@@ -12,6 +12,7 @@ function onSuccess(SUCCESS) {
         // If the IP address is valid, render only the TitleBar component
         mainWindow.webContents.send(channels.APP_STATE, appStates.CONNECTED);
         mainWindow.setContentSize(1800, 850);
+        mainWindow.setResizable(true);
         mainWindow.center();
         setViewBounds(BROWSER_VIEW_INIT);
         return SUCCESS;
