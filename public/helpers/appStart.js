@@ -44,28 +44,24 @@ function startAplication() {
     appBrowserView = new BrowserView();
     mainWindow.setBrowserView(appBrowserView);
 
-    // and load the index.html of the app.
-    // win.loadFile("index.html");
-
     // In production, set the initial browser path to the local bundle generated
     // by the Create React App build process.
     // In development, set it to localhost to allow live/hot-reloading.
-    const appURL = app.isPackaged
-        ? url.format({
-              pathname: path.join(__dirname, "index.html"),
-              protocol: "file:",
-              slashes: true,
-          })
-        : "http://localhost:3000";
-    mainWindow.loadURL(appURL).then(() => {
-        const { title } = require("../../package.json");
-        mainWindow.setTitle(`${title}`);
-        mainWindow.show();
-    });
+    mainWindow
+        .loadURL(
+            app.isPackaged
+                ? "http:localhost:3000"
+                : `file://${path.join(__dirname, "../../build/index.html")}`
+        )
+        .then(() => {
+            const { title } = require("../../package.json");
+            mainWindow.setTitle(`${title}`);
+            mainWindow.show();
+        });
 
     // Automatically open Chrome's DevTools in development mode.
     if (!app.isPackaged) {
-        mainWindow.webContents.openDevTools();
+        mainWindow.webContents.openDevTools({ mode: "detach" });
     }
 
     // Catch the window "move", "resize" and "close" events
