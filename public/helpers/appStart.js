@@ -48,9 +48,10 @@ function startAplication() {
     // In development, set it to localhost to allow live/hot-reloading.
     mainWindow
         .loadURL(
-            app.isPackaged
+            !app.isPackaged
                 ? "http:localhost:3000"
                 : `file://${path.join(__dirname, "../../build/index.html")}`
+            //   "http:localhost:3000"
         )
         .then(() => {
             const { title } = require("../../package.json");

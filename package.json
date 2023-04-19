@@ -28,23 +28,6 @@
     "dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000 && electronmon .\"",
     "electron-package-win": "npm run build && electron-builder -w -c.extraMetadata.main=build/electron.js"
   },
-  "build": {
-    "appId": "com.electron.sentry",
-    "productName": "Electron-React SEA.AI Sentry",
-    "files": ["build/**/*", "node_modules/**/*"],
-    "directories": {
-      "buildResources": "public"
-    },
-    "mac": {
-      "target": "dmg"
-    },
-    "win": {
-      "target": "nsis"
-    },
-    "linux": {
-      "target": "deb"
-    }
-  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -62,9 +45,7 @@
   "devDependencies": {
     "concurrently": "^8.0.1",
     "electron": "^24.0.0",
-    "electron-is-dev": "^2.0.0",
     "wait-on": "^7.0.1",
-    "electron-builder": "^23.6.0",
     "electronmon": "^2.0.2"
   }
 }
