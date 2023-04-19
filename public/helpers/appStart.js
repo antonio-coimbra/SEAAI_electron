@@ -16,7 +16,7 @@ const {
 const path = require("path");
 const url = require("url");
 const preloadScriptPath = path.join(__dirname, "../preload.js");
-const iconPath = path.join(__dirname, "./favion.ico");
+const iconPath = path.join(__dirname, "../icon.ico");
 
 const TITLE_BAR_HEIGHT = 35;
 
@@ -33,6 +33,7 @@ function startAplication() {
         titleBarStyle: "hidden",
         show: false,
         icon: iconPath,
+        title: "Title",
         webPreferences: {
             contextIsolation: true,
             nodeIntegration: true,
@@ -56,7 +57,11 @@ function startAplication() {
               slashes: true,
           })
         : "http://localhost:3000";
-    mainWindow.loadURL(appURL).then(() => mainWindow.show());
+    mainWindow.loadURL(appURL).then(() => {
+        const { title } = require("../../package.json");
+        mainWindow.setTitle(`${title}`);
+        mainWindow.show();
+    });
 
     // Automatically open Chrome's DevTools in development mode.
     if (!app.isPackaged) {
@@ -83,12 +88,16 @@ function startAplication() {
 
         // Fullscreen mode is only available when the app is connected
         if (browserViewActive) {
-            mainWindow.setFullScreen(!mainWindow.isFullScreen());
-            if (browserViewActive && mainWindow.isFullScreen()) {
+            if (!mainWindow.isFullScreen()) {
+                mainWindow.setFullScreen(!mainWindow.isFullScreen());
                 setViewBounds(SET_FULLSCREEN);
-            } else if (browserViewActive && !mainWindow.isFullScreen()) {
-                setViewBounds();
             }
+        }
+    });
+    globalShortcut.register("esc", () => {
+        if (mainWindow.isFullScreen()) {
+            mainWindow.setFullScreen(!mainWindow.isFullScreen());
+            setViewBounds();
         }
     });
 }

@@ -18,6 +18,7 @@
     "react-scripts": "5.0.1"
   },
   "main": "public/electron.js",
+  "title": "SEA.AI Sentry",
   "homepage": "./",
   "scripts": {
     "start": "react-scripts start",
