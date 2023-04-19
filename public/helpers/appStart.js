@@ -4,6 +4,7 @@ const {
     ipcMain,
     net,
     globalShortcut,
+    app,
 } = require("electron");
 const {
     channels,
@@ -13,8 +14,6 @@ const {
 } = require("../../src/shared/constants");
 
 const path = require("path");
-const preloadScriptPath = path.join(__dirname, "../preload.js");
-const iconPath = path.join(__dirname, "./favion.ico");
 
 const TITLE_BAR_HEIGHT = 35;
 
@@ -22,33 +21,44 @@ let mainWindow;
 let appBrowserView;
 
 function startAplication() {
-    const isDev = true;
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 950,
-        height: 720,
+        height: 750,
         minWidth: 470,
         minHeight: 495,
         titleBarStyle: "hidden",
         show: false,
-        icon: iconPath,
+        icon: path.join(__dirname, "./icon.ico"),
         webPreferences: {
             contextIsolation: true,
             nodeIntegration: true,
-            preload: preloadScriptPath,
+            preload: path.join(__dirname, "../preload.js"),
         },
     });
 
     appBrowserView = new BrowserView();
     mainWindow.setBrowserView(appBrowserView);
 
-    // and load the index.html of the app.
-    // win.loadFile("index.html");
-    mainWindow.loadURL("http://localhost:3000").then(() => {
-        mainWindow.show();
-    });
+    // In production, set the initial browser path to the local bundle generated
+    // by the Create React App build process.
+    // In development, set it to localhost to allow live/hot-reloading.
+    mainWindow
+        .loadURL(
+            !app.isPackaged
+                ? "http:localhost:3000"
+                : // : `file://${path.join(__dirname, "../../build/index.html")}`
+                  "http:localhost:3000"
+            // "http:localhost:3000"
+        )
+        .then(() => {
+            const { title } = require("../../package.json");
+            mainWindow.setTitle(`${title}`);
+            mainWindow.show();
+        });
 
-    if (isDev) {
+    // Automatically open Chrome's DevTools in development mode.
+    if (!app.isPackaged) {
         mainWindow.webContents.openDevTools({ mode: "detach" });
     }
 
@@ -72,12 +82,16 @@ function startAplication() {
 
         // Fullscreen mode is only available when the app is connected
         if (browserViewActive) {
-            mainWindow.setFullScreen(!mainWindow.isFullScreen());
-            if (browserViewActive && mainWindow.isFullScreen()) {
+            if (!mainWindow.isFullScreen()) {
+                mainWindow.setFullScreen(!mainWindow.isFullScreen());
                 setViewBounds(SET_FULLSCREEN);
-            } else if (browserViewActive && !mainWindow.isFullScreen()) {
-                setViewBounds();
             }
+        }
+    });
+    globalShortcut.register("esc", () => {
+        if (mainWindow.isFullScreen()) {
+            mainWindow.setFullScreen(!mainWindow.isFullScreen());
+            setViewBounds();
         }
     });
 }
