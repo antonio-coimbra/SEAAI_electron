@@ -14,7 +14,6 @@ const {
 } = require("../../src/shared/constants");
 
 const path = require("path");
-const url = require("url");
 const preloadScriptPath = path.join(__dirname, "../preload.js");
 const iconPath = path.join(__dirname, "../icon.ico");
 
