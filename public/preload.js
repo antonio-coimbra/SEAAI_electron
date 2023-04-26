@@ -16,6 +16,7 @@ const API = {
     getAppState: (setAppState) =>
         ipcRenderer.on(channels.APP_STATE, (event, appState) => {
             setAppState(appState);
+            console.log(appState);
             ipcRenderer.send(channels.ELECTRON_APP_STATE, appState);
         }),
 };

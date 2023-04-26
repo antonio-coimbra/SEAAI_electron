@@ -27,7 +27,7 @@ function recursiveLoadSentry(ipaddress, i, response, recursive) {
     let SUCCESS = true;
     const appBrowserView = getAppBrowserView();
 
-    console.log(`automatic loading ip:${response.answers[i].data}`);
+    console.log(`automatic loading ip:${ipaddress}`);
 
     // if (i === 0 || i === 1) return recursive(response, i + 1);
 

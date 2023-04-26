@@ -47,10 +47,10 @@ function zeroconf(mainWindow) {
         console.log(`recursiveIPCheck result: ${res}`);
         if (res === -1 || res === null) {
             console.log(`recursiveIPCheck FAILED`);
-            onError(mainWindow);
+            onError();
         } else if (res === 0) {
             console.log(`recursiveIPCheck didn't return`);
-            onError(mainWindow);
+            onError();
         }
     });
 
@@ -79,8 +79,6 @@ ipcMain.handle(channels.CANCEL_AUTO_CONNECT, () => {
 });
 
 ipcMain.on(channels.ELECTRON_APP_STATE, (event, currentState) => {
-    console.log(`zeroconf app state: ${currentState}`);
-    if (currentState === appStates.ERROR_AUTO_CONNECTION_STATE) onError();
     appIsConnected = currentState === appStates.CONNECTED ? true : false;
 });
 

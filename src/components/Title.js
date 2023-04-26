@@ -1,10 +1,12 @@
 import "../css/Title.css";
-import logo from "../images/favicon.png";
-function Title({ children }) {
+
+function Title() {
     return (
         <div className="title">
-            <img src={logo} alt="logo" className="title-logo" />
-            <div className="title-text">{children}</div>
+            <div className="title-main">Connect to Sentry</div>
+            <div className="title-message">
+                Insert your Sentry’s IP address to connect to Sentry.
+            </div>
         </div>
     );
 }

@@ -1,6 +1,12 @@
 import "../css/TitleBar.css";
-import logo from "../images/favicon.png";
+import logo from "../images/favicon.svg";
+import { ReactComponent as Close } from "../images/iconclose.svg";
+import { ReactComponent as Restore } from "../images/iconrestore.svg";
+import { ReactComponent as Minimize } from "../images/iconmin.svg";
+// import max from "../images/iconmax.svg";
 import NavLinkButton from "./NavLinkButton";
+
+import { TITLE_BAR_HEIGHT } from "../shared/constants";
 
 function TitleBar() {
     function minimize() {
@@ -14,15 +20,29 @@ function TitleBar() {
         window.api.frame.close();
     }
     return (
-        <nav className="titleBar">
+        <nav className="titleBar" style={{ height: TITLE_BAR_HEIGHT + "px" }}>
             <div className="titleBar-leftNav">
                 <img src={logo} alt="SEA.AI Logo" />
-                <div className="titleBar-leftNav-title">SEA.AI Sentry</div>
             </div>
             <div className="titleBar-rightNav">
-                <NavLinkButton onClickAction={minimize}>&minus;</NavLinkButton>
-                <NavLinkButton onClickAction={maximize}>&#x25A2;</NavLinkButton>
-                <NavLinkButton onClickAction={closeApp}>&#10006;</NavLinkButton>
+                <NavLinkButton
+                    onClickAction={minimize}
+                    specific="titleBar-rightNav-navLink-minimizeBtn"
+                >
+                    <Minimize />
+                </NavLinkButton>
+                <NavLinkButton
+                    onClickAction={maximize}
+                    specific="titleBar-rightNav-navLink-restoreBtn"
+                >
+                    <Restore />
+                </NavLinkButton>
+                <NavLinkButton
+                    onClickAction={closeApp}
+                    specific="titleBar-rightNav-navLink-closeBtn"
+                >
+                    <Close />
+                </NavLinkButton>
             </div>
         </nav>
     );

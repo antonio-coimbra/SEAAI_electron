@@ -8,11 +8,32 @@
     align-items: center;
 }
 
-.titleBar-rightNav-navLink:hover {
-background-color: rgb(100, 100, 100);
-color: rgb(47, 47, 47);
+.titleBar-rightNav-navLink svg {
+    height: 12px;
+    width: 12px;
+    padding: 0px 12px;
 }
 
-.close:hover {
-background-color: rgb(112, 27, 27);
+.titleBar-rightNav-navLink:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.titleBar-rightNav-navLink:active {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.titleBar-rightNav-navLink-closeBtn:hover {
+    background-color: #BE2828;
+}
+
+.titleBar-rightNav-navLink-closeBtn:hover svg>path {
+    fill: white;
+}
+
+.titleBar-rightNav-navLink-closeBtn:active {
+    background-color: #AA1414;
+}
+
+.titleBar-rightNav-navLink-closeBtn:active svg>path {
+    fill: white;
 }

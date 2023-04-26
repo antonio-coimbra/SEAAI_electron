@@ -1,17 +1,18 @@
 import "../css/WaitingForConnection.css";
-import Title from "./Title";
-import StandardButton from "./StandardButton";
-function WaitingForConnection({ setAppState }) {
-    function tryAgain() {
-        setAppState("select-ip");
-    }
+import { ReactComponent as Logo } from "../images/namelogo.svg";
+import { useEffect } from "react";
+import { appStates } from "../shared/constants";
+
+function WaitingForConnection({ appState }) {
+    useEffect(() => {
+        // Connect automatically
+        if (appState === appStates.AUTO_CONNECTION_STATE)
+            window.api.autoConnection();
+    }, [appState]);
+
     return (
         <div className="waitingForConnection">
-            <Title>SEA.AI SENTRY</Title>
-            <div className="waitingForConnection-message">
-                Connecting to SENTRY unit...
-            </div>
-            <StandardButton onClick={tryAgain}>Retry</StandardButton>
+            <Logo />
         </div>
     );
 }
