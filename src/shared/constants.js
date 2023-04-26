@@ -16,6 +16,7 @@ module.exports = {
         ELECTRON_APP_STATE: "electron-app-state",
         MINIMIZE: "app-minimize",
         MAXIMIZE: "app-maximize",
+        MAXRES: "app-maximize-restore",
         CLOSE: "app-close",
         SET_FULLSCREEN: "app-set-fullscreen",
         AUTO_CONNECT: "auto-connect",

@@ -34,16 +34,6 @@ function App() {
                     triedAutoConnect={triedAutoConnect}
                 />
             )}
-            {/* {(appState === appStates.ERROR_STATE ||
-                appState === appStates.ERROR_AUTO_CONNECTION_STATE ||
-                appState === appStates.NO_CONNECTION_ERROR_STATE) && (
-                <SetConnection
-                    setAppState={setAppState}
-                    error={true}
-                    setTriedAutoConnect={setTriedAutoConnect}
-                    triedAutoConnect={triedAutoConnect}
-                />
-            )} */}
         </div>
     );
 }

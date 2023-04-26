@@ -8,7 +8,12 @@ const API = {
         ipcRenderer.invoke(channels.CANCEL_AUTO_CONNECT),
     frame: {
         minimize: () => ipcRenderer.invoke(channels.MINIMIZE),
-        maximize: () => ipcRenderer.invoke(channels.MAXIMIZE),
+        maximize: () => {
+            ipcRenderer.invoke(channels.MAXIMIZE);
+        },
+        restore: () => {
+            ipcRenderer.invoke(channels.MAXIMIZE);
+        },
         close: () => ipcRenderer.invoke(channels.CLOSE),
         setFullScreen: () => ipcRenderer.invoke(channels.SET_FULLSCREEN),
     },
@@ -18,6 +23,10 @@ const API = {
             setAppState(appState);
             console.log(appState);
             ipcRenderer.send(channels.ELECTRON_APP_STATE, appState);
+        }),
+    getIsMaximized: (setIsMaximized) =>
+        ipcRenderer.on(channels.MAXRES, (event, isMaximized) => {
+            setIsMaximized(isMaximized);
         }),
 };
 

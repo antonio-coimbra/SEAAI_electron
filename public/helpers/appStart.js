@@ -24,8 +24,8 @@ function startAplication() {
     mainWindow = new BrowserWindow({
         width: 950,
         height: 750,
-        minWidth: 470,
-        minHeight: 495,
+        minWidth: 950,
+        minHeight: 750,
         titleBarStyle: "hidden",
         show: false,
         backgroundColor: "#191A1A",
@@ -72,6 +72,12 @@ function startAplication() {
     });
     mainWindow.on("restore", () => {
         setViewBounds();
+    });
+    mainWindow.on("unmaximize", () => {
+        mainWindow.webContents.send(channels.MAXRES, false);
+    });
+    mainWindow.on("maximize", () => {
+        mainWindow.webContents.send(channels.MAXRES, true);
     });
     mainWindow.once("focus", () => mainWindow.flashFrame(false));
 

@@ -75,19 +75,10 @@ function IpInput({ appState, triedAutoConnect, setTriedAutoConnect }) {
             {triedAutoConnect && <ErrorMessage>{error}</ErrorMessage>}
             {subFailed && !valid && (
                 <ErrorMessage>
-                    "This address is invalid. Please try again."
+                    This address is invalid. Please try again.
                 </ErrorMessage>
             )}
             {error && !triedAutoConnect && <ErrorMessage>{error}</ErrorMessage>}
-            {/* <ErrorMessage>
-                {triedAutoConnect
-                    ? "Automatic connection failed. Please insert the IP address of the SENTRY unit."
-                    : error
-                    ? error
-                    : subFailed && !valid
-                    ? "This address is invalid. Please try again."
-                    : ""}
-            </ErrorMessage> */}
         </div>
     );
 }
