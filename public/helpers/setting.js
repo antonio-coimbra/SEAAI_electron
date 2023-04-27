@@ -1,0 +1,42 @@
+const Store = require("electron-store");
+const storage = new Store();
+
+const WINDOW_BOUNDS = "window-bounds";
+const WAS_MAXIMIZED = "was-maximized";
+
+function getWindowSavedBounds() {
+    const defaultBounds = [1800, 850];
+    // When is the first time starting the app,
+    // or there's no storage
+
+    const bounds = storage.get(WINDOW_BOUNDS);
+    if (bounds) return bounds;
+    else {
+        storage.set(WINDOW_BOUNDS, defaultBounds);
+        return defaultBounds;
+    }
+}
+
+function getWasMaximized() {
+    const wasMaximized = storage.get(WAS_MAXIMIZED);
+    if (wasMaximized) return true;
+    else {
+        storage.set(WAS_MAXIMIZED, false);
+        return false;
+    }
+}
+
+function saveWindowBounds(bounds) {
+    storage.set(WINDOW_BOUNDS, bounds);
+}
+
+function setWasMaximized(wasMaximized) {
+    storage.set(WAS_MAXIMIZED, wasMaximized);
+}
+
+module.exports = {
+    getWindowSavedBounds,
+    saveWindowBounds,
+    getWasMaximized,
+    setWasMaximized,
+};

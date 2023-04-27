@@ -13,7 +13,7 @@ const {
     BROWSER_VIEW_INIT,
     TITLE_BAR_HEIGHT,
 } = require("../../src/shared/constants");
-
+const { saveWindowBounds, setWasMaximized } = require("./setting");
 const path = require("path");
 
 let mainWindow;
@@ -34,6 +34,8 @@ function startAplication() {
             contextIsolation: true,
             nodeIntegration: true,
             preload: path.join(__dirname, "../preload.js"),
+            // devTools: false,
+            // IMPORTANT TO UNCOMMENT ON RELEASE!!!!!!!!!!!!
         },
     });
 
@@ -71,11 +73,25 @@ function startAplication() {
     mainWindow.on("restore", () => {
         setViewBounds();
     });
+
+    // Send maximize and unmaximize info to the renderer
     mainWindow.on("unmaximize", () => {
         mainWindow.webContents.send(channels.MAXRES, false);
+        const browserViewActive =
+            appBrowserView.getBounds().width !== 0 ||
+            appBrowserView.getBounds().height !== 0;
+        if (browserViewActive) setWasMaximized(false);
     });
     mainWindow.on("maximize", () => {
         mainWindow.webContents.send(channels.MAXRES, true);
+        const browserViewActive =
+            appBrowserView.getBounds().width !== 0 ||
+            appBrowserView.getBounds().height !== 0;
+        if (browserViewActive) setWasMaximized(true);
+    });
+
+    mainWindow.on("resized", () => {
+        saveWindowBounds(mainWindow.getSize());
     });
     mainWindow.once("focus", () => mainWindow.flashFrame(false));
 

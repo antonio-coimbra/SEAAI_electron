@@ -5,16 +5,21 @@ const {
     BROWSER_VIEW_INIT,
 } = require("./appStart");
 const { channels, appStates } = require("../../src/shared/constants");
+const { getWindowSavedBounds, getWasMaximized } = require("./setting");
 
 function onSuccess(SUCCESS) {
+    const bounds = getWindowSavedBounds();
     const mainWindow = getMainWindow();
     if (SUCCESS) {
         // If the IP address is valid, render only the TitleBar component
         mainWindow.webContents.send(channels.APP_STATE, appStates.CONNECTED);
-        mainWindow.setContentSize(1800, 850);
+        mainWindow.setContentSize(bounds[0], bounds[1]);
         mainWindow.setMinimumSize(470, 495);
         mainWindow.center();
+        mainWindow.focus();
         setViewBounds(BROWSER_VIEW_INIT);
+
+        if (getWasMaximized) mainWindow.maximize();
         return SUCCESS;
     } else return !SUCCESS;
 }
