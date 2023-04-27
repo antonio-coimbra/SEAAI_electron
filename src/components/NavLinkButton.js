@@ -3,7 +3,7 @@ import "../css/NavLinkButton.css";
 function NavLinkButton({ onClickAction, specific, children }) {
     return (
         <span
-            className={"titleBar-rightNav-navLink " + specific}
+            className={"navLinkButton navLinkButton-" + specific}
             onClick={onClickAction}
         >
             {children}

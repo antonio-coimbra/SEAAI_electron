@@ -48,7 +48,6 @@ function startAplication() {
             app.isPackaged
                 ? `file://${path.join(__dirname, "../index.html")}`
                 : "http:localhost:3000"
-            // "http:localhost:3000"
         )
         .then(() => {
             const { title } = require("../../package.json");
@@ -57,10 +56,9 @@ function startAplication() {
         });
 
     // Automatically open Chrome's DevTools in development mode.
-    // if (!app.isPackaged) {
-    //     mainWindow.webContents.openDevTools({ mode: "detach" });
-    // }
-    mainWindow.webContents.openDevTools({ mode: "detach" });
+    if (!app.isPackaged) {
+        mainWindow.webContents.openDevTools({ mode: "detach" });
+    }
 
     // Catch the window "move", "resize" and "close" events
     // and re-center the BrowserView if it is already defined

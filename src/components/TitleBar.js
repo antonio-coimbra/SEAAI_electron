@@ -32,32 +32,23 @@ function TitleBar() {
                 <img src={logo} alt="SEA.AI Logo" />
             </div>
             <div className="titleBar-rightNav">
-                <NavLinkButton
-                    onClickAction={minimize}
-                    specific="titleBar-rightNav-navLink-minimizeBtn"
-                >
+                <NavLinkButton onClickAction={minimize} specific="minimizeBtn">
                     <Minimize />
                 </NavLinkButton>
                 {isMaximized && (
-                    <NavLinkButton
-                        onClickAction={maxres}
-                        specific="titleBar-rightNav-navLink-restoreBtn"
-                    >
+                    <NavLinkButton onClickAction={maxres} specific="restoreBtn">
                         <Restore />
                     </NavLinkButton>
                 )}
                 {!isMaximized && (
                     <NavLinkButton
                         onClickAction={maxres}
-                        specific="titleBar-rightNav-navLink-maximizeBtn"
+                        specific="maximizeBtn"
                     >
                         <Maximize />
                     </NavLinkButton>
                 )}
-                <NavLinkButton
-                    onClickAction={closeApp}
-                    specific="titleBar-rightNav-navLink-closeBtn"
-                >
+                <NavLinkButton onClickAction={closeApp} specific="closeBtn">
                     <Close />
                 </NavLinkButton>
             </div>

@@ -21,6 +21,7 @@ module.exports = {
         SET_FULLSCREEN: "app-set-fullscreen",
         AUTO_CONNECT: "auto-connect",
         CANCEL_AUTO_CONNECT: "cancel-auto-connect",
+        OP_SYSTEM: "os-channel",
     },
     regEx,
     SET_FULLSCREEN: "set-fullscreen",

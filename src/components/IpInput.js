@@ -35,7 +35,7 @@ function IpInput({ appState, triedAutoConnect, setTriedAutoConnect }) {
 
     function handleUserInput(e) {
         error = false;
-        setTriedAutoConnect(false);
+
         setValid(regEx.test(e.target.value));
         setInput(e.target.value);
         if (e.target.value === "") {
@@ -44,6 +44,8 @@ function IpInput({ appState, triedAutoConnect, setTriedAutoConnect }) {
     }
 
     function handleSubmit(e) {
+        error = null;
+        setTriedAutoConnect(false);
         e.preventDefault();
         setSubFailed(true);
         if (valid) {
@@ -78,7 +80,9 @@ function IpInput({ appState, triedAutoConnect, setTriedAutoConnect }) {
                     This address is invalid. Please try again.
                 </ErrorMessage>
             )}
-            {error && !triedAutoConnect && <ErrorMessage>{error}</ErrorMessage>}
+            {error && !triedAutoConnect && !subFailed && valid && (
+                <ErrorMessage>{error}</ErrorMessage>
+            )}
         </div>
     );
 }

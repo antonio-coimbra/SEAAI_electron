@@ -14,12 +14,9 @@ function SetConnection({
     triedAutoConnect,
 }) {
     function autoConnect() {
-        console.log("user pressed auto connect");
         setTriedAutoConnect(true);
         setAppState(appStates.AUTO_CONNECTION_STATE);
     }
-
-    console.log("auto connect error = " + triedAutoConnect);
     return (
         <div className="setConnection">
             <img src={logo} alt="logo" className="setConnection-logo" />

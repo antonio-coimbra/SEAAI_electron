@@ -1,4 +1,4 @@
-.titleBar-rightNav-navLink {
+.navLinkButton {
     -webkit-app-region: no-drag;
     height: 100%;
     padding: 0px 10px; 
@@ -8,32 +8,32 @@
     align-items: center;
 }
 
-.titleBar-rightNav-navLink svg {
+.navLinkButton svg {
     height: 12px;
     width: 12px;
     padding: 0px 12px;
 }
 
-.titleBar-rightNav-navLink:hover {
+.navLinkButton:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-.titleBar-rightNav-navLink:active {
+.navLinkButton:active {
     background-color: rgba(255, 255, 255, 0.05);
 }
 
-.titleBar-rightNav-navLink-closeBtn:hover {
+.navLinkButton-closeBtn:hover {
     background-color: #BE2828;
 }
 
-.titleBar-rightNav-navLink-closeBtn:hover svg>path {
+.navLinkButton-closeBtn:hover svg>path {
     fill: white;
 }
 
-.titleBar-rightNav-navLink-closeBtn:active {
+.navLinkButton-closeBtn:active {
     background-color: #AA1414;
 }
 
-.titleBar-rightNav-navLink-closeBtn:active svg>path {
+.navLinkButton-closeBtn:active svg>path {
     fill: white;
 }
