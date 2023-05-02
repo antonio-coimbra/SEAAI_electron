@@ -13,7 +13,7 @@ function App() {
     const [isMacOs, setIsMacOS] = useState(null);
 
     useEffect(() => {
-        // Listen for changes to the appState from ELECTRON
+        // Listen for the event
         window.api.getAppState(setAppState);
     }, []);
 

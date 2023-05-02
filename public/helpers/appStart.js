@@ -179,16 +179,24 @@ ipcMain.handle(channels.MAXIMIZE, () => {
 
 // (Not implemented) fullscreen button handling
 ipcMain.handle(channels.SET_FULLSCREEN, () => {
+    const bounds = mainWindow.getBounds();
     const browserViewActive =
         appBrowserView.getBounds().width !== 0 ||
         appBrowserView.getBounds().height !== 0;
-    if (browserViewActive) {
-        mainWindow.setFullScreen(!mainWindow.isFullScreen());
-        if (browserViewActive && mainWindow.isFullScreen()) {
-            setViewBounds(SET_FULLSCREEN);
-        } else if (browserViewActive && !mainWindow.isFullScreen()) {
-            setViewBounds();
-        }
+    if (browserViewActive && mainWindow.isFullScreen()) {
+        appBrowserView.setBounds({
+            x: 0,
+            y: TITLE_BAR_HEIGHT,
+            width: bounds.width,
+            height: bounds.height - TITLE_BAR_HEIGHT,
+        });
+    } else if (browserViewActive && !mainWindow.isFullScreen()) {
+        appBrowserView.setBounds({
+            x: 0,
+            y: 0,
+            width: bounds.width,
+            height: bounds.height,
+        });
     }
     mainWindow.setFullScreen(!mainWindow.isFullScreen());
 });
