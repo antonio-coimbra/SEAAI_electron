@@ -11,13 +11,13 @@ const {
     appStates,
     SET_FULLSCREEN,
     BROWSER_VIEW_INIT,
+    TITLE_BAR_HEIGHT,
+    MAC_TITLE_BAR_HEIGHT,
 } = require("../../src/shared/constants");
+const { isMac } = require("./detectPlatform");
 
+const { saveWindowBounds, setWasMaximized } = require("./settings");
 const path = require("path");
-const preloadScriptPath = path.join(__dirname, "../preload.js");
-const iconPath = path.join(__dirname, "../icon.ico");
-
-const TITLE_BAR_HEIGHT = 35;
 
 let mainWindow;
 let appBrowserView;
@@ -26,17 +26,19 @@ function startAplication() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 950,
-        height: 720,
-        minWidth: 470,
-        minHeight: 495,
+        height: 750,
+        minWidth: 950,
+        minHeight: 750,
         titleBarStyle: "hidden",
         show: false,
-        icon: iconPath,
-        title: "Title",
+        backgroundColor: "#191A1A",
+        icon: path.join(__dirname, "../icon.ico"),
         webPreferences: {
             contextIsolation: true,
             nodeIntegration: true,
-            preload: preloadScriptPath,
+            preload: path.join(__dirname, "../preload.js"),
+            // devTools: false,
+            // UNCOMMENT ON RELEASE
         },
     });
 
@@ -48,10 +50,9 @@ function startAplication() {
     // In development, set it to localhost to allow live/hot-reloading.
     mainWindow
         .loadURL(
-            !app.isPackaged
-                ? "http:localhost:3000"
-                : `file://${path.join(__dirname, "../../build/index.html")}`
-            //   "http:localhost:3000"
+            app.isPackaged
+                ? `file://${path.join(__dirname, "../index.html")}`
+                : "http:localhost:3000"
         )
         .then(() => {
             const { title } = require("../../package.json");
@@ -74,6 +75,26 @@ function startAplication() {
     });
     mainWindow.on("restore", () => {
         setViewBounds();
+    });
+
+    // Send maximize and unmaximize info to the renderer
+    mainWindow.on("unmaximize", () => {
+        mainWindow.webContents.send(channels.MAXRES, false);
+        const browserViewActive =
+            appBrowserView.getBounds().width !== 0 ||
+            appBrowserView.getBounds().height !== 0;
+        if (browserViewActive) setWasMaximized(false);
+    });
+    mainWindow.on("maximize", () => {
+        mainWindow.webContents.send(channels.MAXRES, true);
+        const browserViewActive =
+            appBrowserView.getBounds().width !== 0 ||
+            appBrowserView.getBounds().height !== 0;
+        if (browserViewActive) setWasMaximized(true);
+    });
+
+    mainWindow.on("resized", () => {
+        saveWindowBounds(mainWindow.getSize());
     });
     mainWindow.once("focus", () => mainWindow.flashFrame(false));
 
@@ -99,6 +120,7 @@ function startAplication() {
 }
 
 function setViewBounds(option) {
+    titleBarHeight = isMac ? MAC_TITLE_BAR_HEIGHT : TITLE_BAR_HEIGHT;
     const bounds = mainWindow.getBounds();
     const browserViewActive = appBrowserView.getBounds().width !== 0;
     switch (option) {
@@ -106,18 +128,18 @@ function setViewBounds(option) {
             if (browserViewActive) {
                 appBrowserView.setBounds({
                     x: 0,
-                    y: TITLE_BAR_HEIGHT,
+                    y: titleBarHeight,
                     width: bounds.width,
-                    height: bounds.height - TITLE_BAR_HEIGHT,
+                    height: bounds.height - titleBarHeight,
                 });
             }
             break;
         case BROWSER_VIEW_INIT:
             appBrowserView.setBounds({
                 x: 0,
-                y: TITLE_BAR_HEIGHT,
+                y: titleBarHeight,
                 width: bounds.width,
-                height: bounds.height - TITLE_BAR_HEIGHT,
+                height: bounds.height - titleBarHeight,
             });
 
             break;

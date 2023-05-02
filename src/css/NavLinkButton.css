@@ -1,18 +1,37 @@
-.titleBar-rightNav-navLink {
+.navLinkButton {
     -webkit-app-region: no-drag;
     height: 100%;
-    padding: 0px 10px; 
     cursor: pointer;
     font-size: 1.3rem;
     display: flex;
     align-items: center;
 }
 
-.titleBar-rightNav-navLink:hover {
-background-color: rgb(100, 100, 100);
-color: rgb(47, 47, 47);
+.navLinkButton svg {
+    height: 16px;
+    width: 16px;
+    padding: 0px 16px;
 }
 
-.close:hover {
-background-color: rgb(112, 27, 27);
+.navLinkButton:hover {
+    background-color: var(--color-dark-mode-overlight-2);
 }
+
+.navLinkButton:active {
+    background-color: var(--color-dark-mode-overlight-1);
+}
+
+.navLinkButton-closeBtn:hover {
+    background-color:var(--color-dark-mode-danger);
+}
+
+.navLinkButton-closeBtn:hover svg>path {
+    fill: var(--color-dark-mode-white);
+}
+
+.navLinkButton-closeBtn:active {
+    background-color: var(--color-foundation-danger-900);
+}
+
+.navLinkButton-closeBtn:active svg>path {
+    fill: var(--color-dark-mode-white);}

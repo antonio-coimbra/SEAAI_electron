@@ -1,27 +1,56 @@
 import "../css/TitleBar.css";
-import logo from "../images/favicon.png";
+import { useState, useEffect } from "react";
+import { ReactComponent as Logo } from "../images/sea-ai-logo.svg";
+import { ReactComponent as Close } from "../images/close.svg";
+import { ReactComponent as Restore } from "../images/window-size.svg";
+import { ReactComponent as Minimize } from "../images/minus.svg";
+import { ReactComponent as Maximize } from "../images/full-size.svg";
 import NavLinkButton from "./NavLinkButton";
 
+import { TITLE_BAR_HEIGHT } from "../shared/constants";
+
 function TitleBar() {
+    const [isMaximized, setIsMaximized] = useState(false);
     function minimize() {
         window.api.frame.minimize();
     }
-    function maximize() {
+    function maxres() {
         window.api.frame.maximize();
     }
     function closeApp() {
         window.api.frame.close();
     }
+
+    useEffect(() => {
+        // Listen for the event
+        window.api.getIsMaximized(setIsMaximized);
+    }, [setIsMaximized]);
+
     return (
-        <nav className="titleBar">
+        <nav className="titleBar" style={{ height: TITLE_BAR_HEIGHT + "px" }}>
             <div className="titleBar-leftNav">
-                <img src={logo} alt="SEA.AI Logo" />
-                <div className="titleBar-leftNav-title">SEA.AI Sentry</div>
+                <Logo className="titleBar-leftNav-logo" />
             </div>
             <div className="titleBar-rightNav">
-                <NavLinkButton onClickAction={minimize}>&minus;</NavLinkButton>
-                <NavLinkButton onClickAction={maximize}>&#x25A2;</NavLinkButton>
-                <NavLinkButton onClickAction={closeApp}>&#10006;</NavLinkButton>
+                <NavLinkButton onClickAction={minimize} specific="minimizeBtn">
+                    <Minimize />
+                </NavLinkButton>
+                {isMaximized && (
+                    <NavLinkButton onClickAction={maxres} specific="restoreBtn">
+                        <Restore />
+                    </NavLinkButton>
+                )}
+                {!isMaximized && (
+                    <NavLinkButton
+                        onClickAction={maxres}
+                        specific="maximizeBtn"
+                    >
+                        <Maximize />
+                    </NavLinkButton>
+                )}
+                <NavLinkButton onClickAction={closeApp} specific="closeBtn">
+                    <Close />
+                </NavLinkButton>
             </div>
         </nav>
     );

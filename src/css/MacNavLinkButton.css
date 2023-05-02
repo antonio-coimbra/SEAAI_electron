@@ -1,0 +1,49 @@
+.macNavLinkButton {
+    -webkit-app-region: no-drag;
+    height: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border-radius: 100%;
+    padding: 0;
+    height: 10px;
+    width: 10px;
+    border: none;
+    margin-right: 6px;
+}
+
+/* .macNavLinkButton-closeBtn {
+    background-image: url(../images/macclose.svg);
+}
+
+.macNavLinkButton-maxBtn {
+    background-image: url(../images/macexpand.svg);
+}
+
+.macNavLinkButton-minBtn {
+    background-image: url(../images/macmin.svg);
+} */
+
+/* .macNavLinkButton:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.macNavLinkButton:active {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.macNavLinkButton-closeBtn:hover {
+    background-color: #BE2828;
+}
+
+.macNavLinkButton-closeBtn:hover svg>path {
+    fill: white;
+}
+
+.macNavLinkButton-closeBtn:active {
+    background-color: #AA1414;
+}
+
+.macNavLinkButton-closeBtn:active svg>path {
+    fill: white;
+} */

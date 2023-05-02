@@ -1,5 +1,6 @@
 const { channels } = require("../src/shared/constants");
 const { contextBridge, ipcRenderer } = require("electron");
+const { isMac } = require("./helpers/detectPlatform");
 
 const API = {
     sendIP: (input) => ipcRenderer.invoke(channels.SEND_IP, input),
@@ -8,7 +9,12 @@ const API = {
         ipcRenderer.invoke(channels.CANCEL_AUTO_CONNECT),
     frame: {
         minimize: () => ipcRenderer.invoke(channels.MINIMIZE),
-        maximize: () => ipcRenderer.invoke(channels.MAXIMIZE),
+        maximize: () => {
+            ipcRenderer.invoke(channels.MAXIMIZE);
+        },
+        restore: () => {
+            ipcRenderer.invoke(channels.MAXIMIZE);
+        },
         close: () => ipcRenderer.invoke(channels.CLOSE),
         setFullScreen: () => ipcRenderer.invoke(channels.SET_FULLSCREEN),
     },
@@ -18,6 +24,13 @@ const API = {
             setAppState(appState);
             ipcRenderer.send(channels.ELECTRON_APP_STATE, appState);
         }),
+    getIsMaximized: (setIsMaximized) =>
+        ipcRenderer.on(channels.MAXRES, (event, isMaximized) => {
+            setIsMaximized(isMaximized);
+        }),
+    getOpSystem: (setIsMacOS) => {
+        setIsMacOS(isMac);
+    },
 };
 
 contextBridge.exposeInMainWorld("api", API);

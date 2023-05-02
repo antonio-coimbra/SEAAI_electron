@@ -7,7 +7,6 @@ const TEST_SERVER_URL = "http://localhost:8080/isthissentry";
 
 function onError() {
     const mainWindow = getMainWindow();
-
     mainWindow.webContents.send(channels.APP_STATE, "error");
 }
 

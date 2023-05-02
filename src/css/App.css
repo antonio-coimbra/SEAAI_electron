@@ -1,0 +1,25 @@
+@font-face {
+    font-family: 'Saira Condensed';
+    src: local('Saira Condensed'), url(../fonts/SairaCondensed-Regular.ttf) format('truetype');
+  }
+  
+body {
+    margin: 0;
+    background-color: #191A1A;
+    font-family: "Saira Condensed";
+    color: #FFFFFF;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+    
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+}
+
+.App {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

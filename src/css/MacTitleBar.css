@@ -1,6 +1,6 @@
 @import './colors.css';
 
-.titleBar {
+.macTitleBar {
     user-select: none;
     -webkit-user-select: none;
     -webkit-app-region: drag;
@@ -12,22 +12,23 @@
     background: var(--color-dark-mode-surface-1);
   }
   
-.titleBar-leftNav {
-  display: flex;
-  height: 100%;
-  align-items: center;
-  padding-left: 16px;
-  gap: 10px;
-}
-
-.titleBar-leftNav-logo{
-    width: 16px;
-    height: 16px;
-  }
-  
-.titleBar-rightNav {
+/* .macTitleBar-leftNav {
   display: flex;
   height: 100%;
   align-items: center;
   flex-direction: row;
+  padding-left: 10px;
+} */
+
+  .macTitleBar-rightNav-logo{
+    width: 24px;
+    height: 24px;
+  }
+  
+.macTitleBar-rightNav {
+  position: absolute;
+  right: 50%;
+  transform: translate(50%, 0);
+  display: flex;
+  align-items: center;
 }

@@ -1,22 +1,45 @@
 import React, { useState } from "react";
 import "../css/IpInput.css";
 import StandardButton from "./StandardButton";
-const { regEx } = require("../shared/constants");
+import ErrorMessage from "./ErrorMessage";
+import { ReactComponent as ConnectIcon } from "../images/log-in.svg";
+const { regEx, appStates } = require("../shared/constants");
+let error = null;
 
-function IpInput() {
+function IpInput({ appState, setTriedAutoConnect }) {
     const [valid, setValid] = useState(true); // only for testing
     const [input, setInput] = useState("172.17.86.154"); // only for testing
     const [subFailed, setSubFailed] = useState(false);
 
+    switch (appState) {
+        default: {
+            error = null;
+            break;
+        }
+        case appStates.NO_CONNECTION_ERROR_STATE: {
+            error =
+                "Connection failed. Please check your internet and try again.";
+            break;
+        }
+        case appStates.ERROR_STATE: {
+            error = "IP address not reachable. Please try again.";
+        }
+    }
+
     function handleUserInput(e) {
-        setValid(regEx.test(e.target.value));
-        setInput(e.target.value);
-        if (e.target.value === "") {
+        error = false;
+        const input = e.target.value.trim();
+
+        setValid(regEx.test(input));
+        setInput(input);
+        if (input === "") {
             setSubFailed(false);
         }
     }
 
     function handleSubmit(e) {
+        error = null;
+        setTriedAutoConnect(false);
         e.preventDefault();
         setSubFailed(true);
         if (valid) {
@@ -27,23 +50,34 @@ function IpInput() {
     }
 
     return (
-        <form className="ipInput" method="post" onSubmit={handleSubmit}>
-            <label className="ipInput-form">
-                IP address:
+        <div className="ipInput">
+            <form
+                className="ipInput-form"
+                method="post"
+                onSubmit={handleSubmit}
+            >
                 <input
                     className="ipInput-form-textEntry"
                     type="text"
-                    placeholder="000.00.00.000"
+                    placeholder="000.000.000.000"
                     defaultValue={input}
                     autoFocus={true}
                     onChange={handleUserInput}
                 />
-            </label>
-            <div className="ipInput-errorMessage">
-                {subFailed && !valid ? "Please insert a valid IP address" : ""}
-            </div>
-            <StandardButton type="submit">CONNECT</StandardButton>
-        </form>
+                <StandardButton type="submit">
+                    <ConnectIcon />
+                    Connect to Sentry
+                </StandardButton>
+            </form>
+            {subFailed && !valid && (
+                <ErrorMessage>
+                    This address is invalid. Please try again.
+                </ErrorMessage>
+            )}
+            {error && !subFailed && valid && (
+                <ErrorMessage>{error}</ErrorMessage>
+            )}
+        </div>
     );
 }
 

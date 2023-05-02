@@ -1,17 +1,21 @@
 .title {
+    user-select: none;
+    -webkit-user-select: none;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 16px;
 }
 
-.title-logo{
-    margin: 0px;
-    padding: 0px;
+
+.title-main {
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 48px;
 }
 
-.title-text {
-    color: rgba(255, 255, 255, 0.561);
-    font-size: 4rem;
-    font-weight: bold;
-    padding-bottom: 15px;
+.title-message {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
 }

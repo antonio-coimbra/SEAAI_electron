@@ -1,12 +1,13 @@
 .waitingForConnection {
-    margin-top: 15vh;
+    user-select: none;
+    -webkit-user-select: none;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    align-items: center;;
+    position: absolute;
+    top:0;
+    bottom: 0;
 }
 
-.waitingForConnection-message {
-    text-align: center;
-    color: rgba(255, 255, 255, 0.561);
-    font-size: 1.5rem;
+.waitingForConnection-nameLogo {
+    width: 256px;
 }

@@ -1,33 +1,46 @@
 import { useEffect, useState } from "react";
 import { appStates } from "./shared/constants";
 import TitleBar from "./components/TitleBar";
-import AutoConnection from "./components/AutoConnection";
+import MacTitleBar from "./components/MacTitleBar";
 import SetConnection from "./components/SetConnection";
 import WaitingForConnection from "./components/WaitingForConnection";
-import ErrorSetConnection from "./components/ErrorSetConnection";
-import AutoConnectionError from "./components/AutoConnectionError";
+import "./css/App.css";
 
 function App() {
-    const [appState, setAppState] = useState(appStates.AUTO_CONNECTION_STATE);
+    // debugger;
+    const [appState, setAppState] = useState(appStates.SELECT_IP_STATE);
+    const [triedAutoConnect, setTriedAutoConnect] = useState(false);
+    const [isMacOs, setIsMacOS] = useState(null);
 
     useEffect(() => {
         // Listen for changes to the appState from ELECTRON
         window.api.getAppState(setAppState);
     }, []);
 
+    useEffect(() => {
+        // Listen for the event
+        window.api.getOpSystem(setIsMacOS);
+    }, []);
+
     return (
         <div className="App">
-            <TitleBar />
-            {appState === appStates.AUTO_CONNECTION_STATE && (
-                <AutoConnection setAppState={setAppState} />
+            {isMacOs && <MacTitleBar />}
+            {!isMacOs && <TitleBar />}
+            {(appState === appStates.CONNECTING_STATE ||
+                appState === appStates.AUTO_CONNECTION_STATE) && (
+                <WaitingForConnection appState={appState} />
             )}
-            {appState === appStates.CONNECTING_STATE && (
-                <WaitingForConnection setAppState={setAppState} />
-            )}
-            {appState === appStates.SELECT_IP_STATE && <SetConnection />}
-            {appState === appStates.ERROR_STATE && <ErrorSetConnection />}
-            {appState === appStates.ERROR_AUTO_CONNECTION_STATE && (
-                <AutoConnectionError />
+            {(appState === appStates.SELECT_IP_STATE ||
+                appState === appStates.ERROR_STATE ||
+                appState === appStates.ERROR_AUTO_CONNECTION_STATE ||
+                appState === appStates.NO_CONNECTION_ERROR_STATE) && (
+                <SetConnection
+                    setAppState={setAppState}
+                    appState={appState}
+                    error={false}
+                    setTriedAutoConnect={setTriedAutoConnect}
+                    triedAutoConnect={triedAutoConnect}
+                />
             )}
         </div>
     );

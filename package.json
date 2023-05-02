@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "author": {
-    "name": "António Coimbra",
-    "email": "antonio.coimbra@sea.ai"
+    "name": "SEA.AI"
   },
-  "description": "Electron desktop implementation for the Sentry React application.",
+  "description": "SEA.AI SENTRY desktop application",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "cross-env": "^7.0.3",
+    "electron-store": "^8.1.0",
     "multicast-dns": "^7.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -25,14 +25,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000 && electronmon .\"",
-    "electron-package-win": "npm run build && electron-builder -w -c.extraMetadata.main=build/electron.js"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://192.168.56.1:3000 && electronmon .\"",
+    "package:mac": "npm run build && electron-builder -m -c.extraMetadata.main=build/electron.js",
+    "package:win": "npm run build && electron-builder -w -c.extraMetadata.main=build/electron.js",
+    "package:linux": "npm run build && electron-builder -l -c.extraMetadata.main=build/electron.js"
   },
   "browserslist": {
     "production": [
@@ -45,7 +41,30 @@
   "devDependencies": {
     "concurrently": "^8.0.1",
     "electron": "^24.0.0",
-    "wait-on": "^7.0.1",
-    "electronmon": "^2.0.2"
+    "electron-builder": "^23.6.0",
+    "electronmon": "^2.0.2",
+    "wait-on": "^7.0.1"
+  },
+  "build": {
+    "appId": "com.sea.ai.sentry",
+    "productName": "SEA.AI Sentry",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*",
+      "./src/shared/constants.js",
+      ".src/fonts/*/"
+    ],
+    "directories": {
+      "buildResources": "public"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "deb"
+    }
   }
 }

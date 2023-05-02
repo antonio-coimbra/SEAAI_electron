@@ -1,10 +1,9 @@
 import "../css/NavLinkButton.css";
 
-function NavLinkButton({ onClickAction, id, children }) {
+function NavLinkButton({ onClickAction, specific, children }) {
     return (
         <span
-            className={"titleBar-rightNav-navLink"}
-            id={id}
+            className={"navLinkButton navLinkButton-" + specific}
             onClick={onClickAction}
         >
             {children}

@@ -70,7 +70,7 @@ ipcMain.handle(channels.AUTO_CONNECT, () => {
         console.log("No internet connection");
         getMainWindow.webContents.send(
             channels.APP_STATE,
-            appStates.ERROR_STATE
+            appStates.NO_CONNECTION_ERROR_STATE
         );
     } else zeroconf(getMainWindow());
 });
