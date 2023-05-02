@@ -1,5 +1,7 @@
+@import './constants.css';
+
 .errorMessage {
-    color: #BE2828;
+    color: var(--color-dark-mode-danger);
     font-weight: 500;
     font-size: 16px;
     line-height: 100%;

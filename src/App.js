@@ -25,7 +25,7 @@ function App() {
     return (
         <div className="App">
             {isMacOs && <MacTitleBar />}
-            {!isMacOs && <TitleBar />}
+            {!isMacOs && <MacTitleBar />}
             {(appState === appStates.CONNECTING_STATE ||
                 appState === appStates.AUTO_CONNECTION_STATE) && (
                 <WaitingForConnection appState={appState} />

@@ -25,7 +25,8 @@
   
 .macTitleBar-rightNav {
   position: absolute;
-  right: 49%;
+  right: 50%;
+  transform: translate(50%, 0);
   display: flex;
   align-items: center;
 }

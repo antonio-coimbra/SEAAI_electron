@@ -13,7 +13,8 @@ const {
     BROWSER_VIEW_INIT,
     TITLE_BAR_HEIGHT,
 } = require("../../src/shared/constants");
-const { saveWindowBounds, setWasMaximized } = require("./setting");
+
+const { saveWindowBounds, setWasMaximized } = require("./settings");
 const path = require("path");
 
 let mainWindow;
@@ -29,13 +30,13 @@ function startAplication() {
         titleBarStyle: "hidden",
         show: false,
         backgroundColor: "#191A1A",
-        icon: path.join(__dirname, "./icon.ico"),
+        icon: path.join(__dirname, "../icon.ico"),
         webPreferences: {
             contextIsolation: true,
             nodeIntegration: true,
             preload: path.join(__dirname, "../preload.js"),
             // devTools: false,
-            // IMPORTANT TO UNCOMMENT ON RELEASE!!!!!!!!!!!!
+            // UNCOMMENT ON RELEASE
         },
     });
 

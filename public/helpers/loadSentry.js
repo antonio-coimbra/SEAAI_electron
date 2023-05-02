@@ -5,7 +5,7 @@ const {
     BROWSER_VIEW_INIT,
 } = require("./appStart");
 const { channels, appStates } = require("../../src/shared/constants");
-const { getWindowSavedBounds, getWasMaximized } = require("./setting");
+const { getWindowSavedBounds, getWasMaximized } = require("./settings");
 
 function onSuccess(SUCCESS) {
     const bounds = getWindowSavedBounds();

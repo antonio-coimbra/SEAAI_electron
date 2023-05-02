@@ -30,12 +30,6 @@
     "package:win": "npm run build && electron-builder -w -c.extraMetadata.main=build/electron.js",
     "package:linux": "npm run build && electron-builder -l -c.extraMetadata.main=build/electron.js"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       "last 1 electron version"
