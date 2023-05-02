@@ -7,21 +7,26 @@
     justify-content: center;
     gap: 48px;
     width: 600px;
-    filter: drop-shadow(0px 4px 20px rgba(0, 0, 0, 0.1));
     border-radius: 16px;
-
     position: absolute; 
     top:0;
     bottom: 0; 
 }   
 
 .setConnection-message {
-    font-family: 'Saira Condensed';
-    font-style: normal;
     font-weight: 400;
     font-size: 20px;
     line-height: 24px;
-    /* or 120% */
-
     text-align: center;
+}
+
+.setConnection-logo {
+    width: 96px;
+    height: 96px;
+}
+
+.setConnection-tryAutoConnection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

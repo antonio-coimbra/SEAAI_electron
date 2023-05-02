@@ -1,4 +1,4 @@
-@import './constants.css';
+@import './colors.css';
 
 .errorMessage {
     color: var(--color-dark-mode-danger);

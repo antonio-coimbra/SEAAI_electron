@@ -1,3 +1,5 @@
+@import './colors.css';
+
 .macTitleBar {
     user-select: none;
     -webkit-user-select: none;
@@ -7,18 +9,18 @@
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
-    background: #1E1F1F;
+    background: var(--color-dark-mode-surface-1);
   }
   
-.macTitleBar-leftNav {
+/* .macTitleBar-leftNav {
   display: flex;
   height: 100%;
   align-items: center;
   flex-direction: row;
   padding-left: 10px;
-}
+} */
 
-.macTitleBar-rightNav>img{
+  .macTitleBar-rightNav-logo{
     width: 24px;
     height: 24px;
   }

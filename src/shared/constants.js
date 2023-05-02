@@ -26,5 +26,6 @@ module.exports = {
     regEx,
     SET_FULLSCREEN: "set-fullscreen",
     BROWSER_VIEW_INIT: "browser-view-init",
-    TITLE_BAR_HEIGHT: 36,
+    TITLE_BAR_HEIGHT: 32,
+    MAC_TITLE_BAR_HEIGHT: 32,
 };

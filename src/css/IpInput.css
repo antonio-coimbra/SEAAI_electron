@@ -1,3 +1,5 @@
+@import './colors.css';
+
 .ipInput {
     display: flex;
     flex-direction: column;
@@ -15,16 +17,19 @@
     font-family: 'Saira Condensed';
     width: 100%;
     border: none;
-    background: rgba(0, 0, 0, 0.2);
-    color: #7D8082;
+    background: var(--color-dark-mode-overlay-2);
+    color: var(--color-dark-mode-on-surface-1);
+    
     font-weight: 500;
     font-size: 16px;
     line-height: 100%;
-    /* identical to box height, or 16px */
     padding: 16px;
-    gap: 16px;
     margin-right: 8px;
 }
+
+::placeholder {
+    color: var(--color-dark-mode-on-surface-2);
+  }
 
 .ipInput-form-textEntry:focus{
     outline-width: 0;

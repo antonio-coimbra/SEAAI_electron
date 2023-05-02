@@ -1,5 +1,5 @@
 import "../css/WaitingForConnection.css";
-import { ReactComponent as Logo } from "../images/namelogo.svg";
+import { ReactComponent as NameLogo } from "../images/namelogo.svg";
 import { useEffect } from "react";
 import { appStates } from "../shared/constants";
 
@@ -12,7 +12,7 @@ function WaitingForConnection({ appState }) {
 
     return (
         <div className="waitingForConnection">
-            <Logo />
+            <NameLogo className="waitingForConnection-nameLogo" />
         </div>
     );
 }

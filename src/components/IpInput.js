@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import "../css/IpInput.css";
 import StandardButton from "./StandardButton";
 import ErrorMessage from "./ErrorMessage";
-import connect from "../images/connect.svg";
+import { ReactComponent as ConnectIcon } from "../images/log-in.svg";
 const { regEx, appStates } = require("../shared/constants");
 let error = null;
 
-function IpInput({ appState, triedAutoConnect, setTriedAutoConnect }) {
+function IpInput({ appState, setTriedAutoConnect }) {
     const [valid, setValid] = useState(true); // only for testing
     const [input, setInput] = useState("172.17.86.154"); // only for testing
     const [subFailed, setSubFailed] = useState(false);
@@ -16,29 +16,23 @@ function IpInput({ appState, triedAutoConnect, setTriedAutoConnect }) {
             error = null;
             break;
         }
-        case appStates.ERROR_AUTO_CONNECTION_STATE: {
-            triedAutoConnect
-                ? (error =
-                      "Automatic connection failed. Please insert the IP address of the SENTRY unit.")
-                : (error = null);
-            break;
-        }
         case appStates.NO_CONNECTION_ERROR_STATE: {
             error =
-                "Connection failed. Please check your internet access and try again.";
+                "Connection failed. Please check your internet and try again.";
             break;
         }
         case appStates.ERROR_STATE: {
-            error = "Address not reachable. Please try again.";
+            error = "IP address not reachable. Please try again.";
         }
     }
 
     function handleUserInput(e) {
         error = false;
+        const input = e.target.value.trim();
 
-        setValid(regEx.test(e.target.value));
-        setInput(e.target.value);
-        if (e.target.value === "") {
+        setValid(regEx.test(input));
+        setInput(input);
+        if (input === "") {
             setSubFailed(false);
         }
     }
@@ -70,17 +64,17 @@ function IpInput({ appState, triedAutoConnect, setTriedAutoConnect }) {
                     autoFocus={true}
                     onChange={handleUserInput}
                 />
-                <StandardButton type="submit" icon={connect}>
+                <StandardButton type="submit">
+                    <ConnectIcon />
                     Connect to Sentry
                 </StandardButton>
             </form>
-            {triedAutoConnect && <ErrorMessage>{error}</ErrorMessage>}
             {subFailed && !valid && (
                 <ErrorMessage>
                     This address is invalid. Please try again.
                 </ErrorMessage>
             )}
-            {error && !triedAutoConnect && !subFailed && valid && (
+            {error && !subFailed && valid && (
                 <ErrorMessage>{error}</ErrorMessage>
             )}
         </div>

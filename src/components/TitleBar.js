@@ -1,10 +1,10 @@
 import "../css/TitleBar.css";
 import { useState, useEffect } from "react";
-import logo from "../images/favicon.svg";
-import { ReactComponent as Close } from "../images/iconclose.svg";
-import { ReactComponent as Restore } from "../images/iconrestore.svg";
-import { ReactComponent as Minimize } from "../images/iconmin.svg";
-import { ReactComponent as Maximize } from "../images/iconmax.svg";
+import { ReactComponent as Logo } from "../images/sea-ai-logo.svg";
+import { ReactComponent as Close } from "../images/close.svg";
+import { ReactComponent as Restore } from "../images/window-size.svg";
+import { ReactComponent as Minimize } from "../images/minus.svg";
+import { ReactComponent as Maximize } from "../images/full-size.svg";
 import NavLinkButton from "./NavLinkButton";
 
 import { TITLE_BAR_HEIGHT } from "../shared/constants";
@@ -29,7 +29,7 @@ function TitleBar() {
     return (
         <nav className="titleBar" style={{ height: TITLE_BAR_HEIGHT + "px" }}>
             <div className="titleBar-leftNav">
-                <img src={logo} alt="SEA.AI Logo" />
+                <Logo className="titleBar-leftNav-logo" />
             </div>
             <div className="titleBar-rightNav">
                 <NavLinkButton onClickAction={minimize} specific="minimizeBtn">

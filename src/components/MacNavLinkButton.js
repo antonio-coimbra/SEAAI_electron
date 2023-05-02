@@ -1,6 +1,6 @@
 import "../css/MacNavLinkButton.css";
 
-function MacNavLinkButton({ onClickAction, specific, children }) {
+function MacNavLinkButton({ onClickAction, specific }) {
     return (
         <button
             className={"macNavLinkButton macNavLinkButton-" + specific}

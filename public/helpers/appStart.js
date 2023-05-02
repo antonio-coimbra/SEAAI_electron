@@ -12,7 +12,9 @@ const {
     SET_FULLSCREEN,
     BROWSER_VIEW_INIT,
     TITLE_BAR_HEIGHT,
+    MAC_TITLE_BAR_HEIGHT,
 } = require("../../src/shared/constants");
+const { isMac } = require("./detectPlatform");
 
 const { saveWindowBounds, setWasMaximized } = require("./settings");
 const path = require("path");
@@ -118,6 +120,7 @@ function startAplication() {
 }
 
 function setViewBounds(option) {
+    titleBarHeight = isMac ? MAC_TITLE_BAR_HEIGHT : TITLE_BAR_HEIGHT;
     const bounds = mainWindow.getBounds();
     const browserViewActive = appBrowserView.getBounds().width !== 0;
     switch (option) {
@@ -125,18 +128,18 @@ function setViewBounds(option) {
             if (browserViewActive) {
                 appBrowserView.setBounds({
                     x: 0,
-                    y: TITLE_BAR_HEIGHT,
+                    y: titleBarHeight,
                     width: bounds.width,
-                    height: bounds.height - TITLE_BAR_HEIGHT,
+                    height: bounds.height - titleBarHeight,
                 });
             }
             break;
         case BROWSER_VIEW_INIT:
             appBrowserView.setBounds({
                 x: 0,
-                y: TITLE_BAR_HEIGHT,
+                y: titleBarHeight,
                 width: bounds.width,
-                height: bounds.height - TITLE_BAR_HEIGHT,
+                height: bounds.height - titleBarHeight,
             });
 
             break;
