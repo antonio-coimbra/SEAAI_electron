@@ -5,9 +5,7 @@ const { ipcMain } = require("electron");
 const { channels, appStates } = require("../../src/shared/constants");
 const mdns = require("multicast-dns")();
 
-let res = 0;
 let appIsConnected = false;
-let stateInRec;
 
 function onError() {
     // go to error page and manual ip insertion
@@ -19,7 +17,6 @@ function onError() {
 }
 
 function recursiveIPCheck(response, i) {
-    console.log("state in recursive iteration " + i + ": " + stateInRec);
     if (i < response.answers.length) {
         if (response.answers[i].name.includes("oscar.local") && response) {
             let ipFromZeroConf = response
@@ -43,14 +40,15 @@ function zeroconf(mainWindow) {
     mdns.on("response", function (response) {
         mdns.destroy(); // closes the socket
         let i = 0;
-        res = recursiveIPCheck(response, i);
-        console.log(`recursiveIPCheck result: ${res}`);
+        const res = recursiveIPCheck(response, i);
         if (res === -1 || res === null) {
             console.log(`recursiveIPCheck FAILED`);
             onError();
         } else if (res === 0) {
             console.log(`recursiveIPCheck didn't return`);
             onError();
+        } else {
+            console.log(`recursiveIPCheck returned: ${res}`);
         }
     });
 

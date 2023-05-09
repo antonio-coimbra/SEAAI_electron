@@ -8,7 +8,7 @@ import "./css/App.css";
 
 function App() {
     // debugger;
-    const [appState, setAppState] = useState(appStates.SELECT_IP_STATE);
+    const [appState, setAppState] = useState(appStates.AUTO_CONNECTION_STATE);
     const [triedAutoConnect, setTriedAutoConnect] = useState(false);
     const [isMacOs, setIsMacOS] = useState(null);
 
@@ -33,7 +33,8 @@ function App() {
             {(appState === appStates.SELECT_IP_STATE ||
                 appState === appStates.ERROR_STATE ||
                 appState === appStates.ERROR_AUTO_CONNECTION_STATE ||
-                appState === appStates.NO_CONNECTION_ERROR_STATE) && (
+                appState === appStates.NO_CONNECTION_ERROR_STATE ||
+                appState === appStates.ERROR_IS_NOT_SENTRY) && (
                 <SetConnection
                     setAppState={setAppState}
                     appState={appState}

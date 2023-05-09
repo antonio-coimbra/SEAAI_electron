@@ -5,6 +5,7 @@ module.exports = {
         NO_CONNECTION_ERROR_STATE: "no-connection-error",
         ERROR_STATE: "error",
         ERROR_AUTO_CONNECTION_STATE: "auto-connection-error",
+        ERROR_IS_NOT_SENTRY: "is-not-sentry",
         SELECT_IP_STATE: "select-ip",
         CONNECTING_STATE: "connecting",
         AUTO_CONNECTION_STATE: "auto-connection",
@@ -26,6 +27,8 @@ module.exports = {
     regEx,
     SET_FULLSCREEN: "set-fullscreen",
     BROWSER_VIEW_INIT: "browser-view-init",
+    SIGNAL_SERVER_PORT: "9002",
+    SIGNAL_SERVER_URL: "/websocket/app",
     TITLE_BAR_HEIGHT: 32,
     MAC_TITLE_BAR_HEIGHT: 32,
 };

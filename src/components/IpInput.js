@@ -19,10 +19,14 @@ function IpInput({ appState, setTriedAutoConnect }) {
         case appStates.NO_CONNECTION_ERROR_STATE: {
             error =
                 "Connection failed. Please check your internet and try again.";
-            break;
         }
         case appStates.ERROR_STATE: {
             error = "IP address not reachable. Please try again.";
+            break;
+        }
+        case appStates.ERROR_IS_NOT_SENTRY: {
+            error = "IP address not recognized as a SEA.AI product.";
+            break;
         }
     }
 

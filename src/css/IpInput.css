@@ -19,7 +19,7 @@
     border: none;
     background: var(--color-dark-mode-overlay-2);
     color: var(--color-dark-mode-on-surface-1);
-    
+    outline: none;
     font-weight: 500;
     font-size: 16px;
     line-height: 100%;
@@ -33,4 +33,7 @@
 
 .ipInput-form-textEntry:focus{
     outline-width: 0;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
 }
