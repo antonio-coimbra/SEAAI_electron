@@ -61,14 +61,14 @@ function zeroconf(mainWindow) {
         ],
     });
 
-    // close the connection after 3 seconds
+    // close the connection after 15 seconds
     // Send app to insert ip state
-    // setTimeout(() => {
-    //     if (!appIsConnected) {
-    //         console.log("auto connect timeout");
-    //         onError(mainWindow);
-    //     }
-    // }, 10000);
+    setTimeout(() => {
+        if (!appIsConnected) {
+            console.log("auto connect timeout");
+            onError(mainWindow);
+        }
+    }, 15000);
 }
 
 ipcMain.handle(channels.CANCEL_AUTO_CONNECT, () => {
