@@ -9,7 +9,9 @@ import "./css/App.css";
 
 function App() {
     // debugger;
-    const [appState, setAppState] = useState(appStates.SELECT_IP_STATE);
+    const [appState, setAppState] = useState(
+        appStates.RETRY_AUTO_CONNECTION_STATE
+    );
     const [triedAutoConnect, setTriedAutoConnect] = useState(false);
     const [isMacOs, setIsMacOS] = useState(null);
 
@@ -23,6 +25,8 @@ function App() {
         // Listen for the event
         window.api.getOpSystem(setIsMacOS);
     }, []);
+
+    console.log(appState);
 
     return (
         <div className="app">
@@ -47,7 +51,7 @@ function App() {
                         triedAutoConnect={triedAutoConnect}
                     />
                     <HelpMenu className="app-helpMenu" />
-                    <div className="teste"></div>
+                    <div className="app-hideHelpMenu"></div>
                 </>
             )}
         </div>

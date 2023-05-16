@@ -7,8 +7,8 @@ const { regEx, appStates } = require("../shared/constants");
 let error = null;
 
 function IpInput({ appState, setAppState, setTriedAutoConnect }) {
-    const [valid, setValid] = useState(true); // only for testing
-    const [input, setInput] = useState("172.17.86.154"); // only for testing
+    const [valid, setValid] = useState(false); //true only for testing
+    const [input, setInput] = useState(""); // 172.17.86.153 only for testing
     const [subFailed, setSubFailed] = useState(false);
 
     switch (appState) {

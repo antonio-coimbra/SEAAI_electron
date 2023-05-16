@@ -5,8 +5,8 @@ import { appStates } from "../shared/constants";
 
 function WaitingForConnection({ appState }) {
     useEffect(() => {
-        // Connect automatically
         if (appState === appStates.AUTO_CONNECTION_STATE)
+            // Connect automatically
             window.api.autoConnection();
     }, [appState]);
 
