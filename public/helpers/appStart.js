@@ -25,9 +25,9 @@ let appBrowserView;
 function startAplication() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
-        width: 950,
+        width: 970,
         height: 750,
-        minWidth: 950,
+        minWidth: 970,
         minHeight: 750,
         titleBarStyle: "hidden",
         show: false,
@@ -37,8 +37,7 @@ function startAplication() {
             contextIsolation: true,
             nodeIntegration: true,
             preload: path.join(__dirname, "../preload.js"),
-            // devTools: false,
-            // UNCOMMENT ON RELEASE
+            // devTools: false, // UNCOMMENT ON RELEASE
         },
     });
 

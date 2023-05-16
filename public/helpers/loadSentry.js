@@ -34,8 +34,6 @@ function recursiveLoadSentry(ipaddress, i, response, recursive) {
 
     console.log(`automatic loading ip:${ipaddress}`);
 
-    // if (i === 0 || i === 1) return recursive(response, i + 1);
-
     appBrowserView.webContents.once("did-finish-load", () => {
         console.log("borwserView: did-finish-load");
         return onSuccess(SUCCESS);
