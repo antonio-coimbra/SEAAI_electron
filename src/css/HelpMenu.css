@@ -1,0 +1,79 @@
+.helpMenu {
+    color: var(--color-dark-mode-on-surface-2);
+    width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 8px;
+    font-family: 'Saira-Regular';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    position: absolute;
+    background-color: var(--color-dark-mode-surface-1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+
+
+.helpMenu-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-dark-mode-surface-1);
+    height: 100%;
+    width: 100%;
+    padding: 24px 0px;
+    border-radius: 8px;
+    gap: 8px;
+}
+
+.helpMenu-header svg>path {
+    fill: var(--color-dark-mode-on-surface-2);
+}
+
+.helpMenu-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--color-dark-mode-overlay-1);
+    height: 100%;
+    width: 100%;
+    gap: 48px;
+    padding: 48px 0px;
+}
+
+.helpMenu-content-problems > ul > li {
+    margin-top: 16px;
+}
+
+.helpMenu-content-problems > ul {
+   margin: 0px;
+   gap: 16px;
+   color: var(--color-dark-mode-on-surface-1);
+}
+
+.helpMenu-content-service {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.helpMenu-content-service-contacts {
+    display: flex;
+    gap: 24px;
+}
+
+.helpMenu-content-service-contacts > div {
+    display: flex;
+    gap: 4px;
+}
+
+.helpMenu-content-service-contacts-item {
+    color: var(--color-dark-mode-on-surface-1);
+}
+
+p {margin: 0px;}

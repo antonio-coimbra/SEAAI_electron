@@ -14,8 +14,9 @@
     line-height: 48px;
 }
 
-.title-message {
+.title-subtitle {
     font-weight: 400;
     font-size: 20px;
     line-height: 24px;
+    color: var(--color-dark-mode-on-background-1);
 }

@@ -1,9 +1,15 @@
 @import './colors.css';
 
+@font-face {
+    font-family: 'Saira-Bold';
+    src: local('Saira Condensed'), url(../fonts/SairaCondensed-Bold.ttf) format('truetype');
+  }
+
 .ipInput {
     display: flex;
     flex-direction: column;
     width: 100%;
+    gap:16px
 }
 
 .ipInput-form {
@@ -25,6 +31,7 @@
     line-height: 100%;
     padding: 16px;
     margin-right: 8px;
+    font-family: 'Saira-Medium';
 }
 
 ::placeholder {
@@ -36,4 +43,19 @@
     box-shadow: none;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
+}
+
+.ipInput-goBack {
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-dark-mode-accent-2);
+    font-family: 'Saira-Medium';
+    cursor: pointer;
+    gap: 8px;
+}
+
+.ipInput-goBack svg>path {
+    fill: var(--color-dark-mode-accent-2);
 }

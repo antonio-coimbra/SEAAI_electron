@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import "../css/IpInput.css";
 import StandardButton from "./StandardButton";
 import ErrorMessage from "./ErrorMessage";
-import { ReactComponent as ConnectIcon } from "../images/log-in.svg";
+import { ReactComponent as ChevronLeft } from "../images/chevron-left.svg";
 const { regEx, appStates } = require("../shared/constants");
 let error = null;
 
-function IpInput({ appState, setTriedAutoConnect }) {
+function IpInput({ appState, setAppState, setTriedAutoConnect }) {
     const [valid, setValid] = useState(true); // only for testing
     const [input, setInput] = useState("172.17.86.154"); // only for testing
     const [subFailed, setSubFailed] = useState(false);
@@ -53,6 +53,10 @@ function IpInput({ appState, setTriedAutoConnect }) {
         }
     }
 
+    function goBack() {
+        setAppState(appStates.RETRY_AUTO_CONNECTION_STATE);
+    }
+
     return (
         <div className="ipInput">
             <form
@@ -68,10 +72,7 @@ function IpInput({ appState, setTriedAutoConnect }) {
                     autoFocus={true}
                     onChange={handleUserInput}
                 />
-                <StandardButton type="submit">
-                    <ConnectIcon />
-                    Connect to Sentry
-                </StandardButton>
+                <StandardButton type="submit">Connect to IP</StandardButton>
             </form>
             {subFailed && !valid && (
                 <ErrorMessage>
@@ -81,6 +82,10 @@ function IpInput({ appState, setTriedAutoConnect }) {
             {error && !subFailed && valid && (
                 <ErrorMessage>{error}</ErrorMessage>
             )}
+            <div className="ipInput-goBack" onClick={goBack}>
+                <ChevronLeft />
+                Go Back
+            </div>
         </div>
     );
 }

@@ -68,28 +68,36 @@ function isThisSentryRecursive(
     zeroConfResponse,
     recursive
 ) {
-    const socket = new WebSocket(
-        "ws://" + ipaddress + ":" + SIGNAL_SERVER_PORT + SIGNAL_SERVER_URL
-    );
-
-    socket.onerror = function (event) {
-        console.log("WebSocket error");
+    if (i == 0) {
+        console.log(ipaddress);
         return onRecursiveError(recursive, zeroConfResponse, i);
-    };
+    } else {
+        const socket = new WebSocket(
+            "ws://" + ipaddress + ":" + SIGNAL_SERVER_PORT + SIGNAL_SERVER_URL
+        );
 
-    socket.onclose = function (event) {
-        console.log("WebSocket closed");
-        console.log(event.code);
-    };
+        socket.onerror = function (event) {
+            console.log("WebSocket error");
+            return onRecursiveError(recursive, zeroConfResponse, i);
+        };
 
-    socket.onmessage = function (event) {
-        var data = event.data;
-        console.log(JSON.parse(data).topic);
-        if (JSON.parse(data).topic === "HELLO") {
-            socket.close();
-            return loadSentry(ipaddress);
-        } else return onRecursiveError(recursive, zeroConfResponse, i);
-    };
+        socket.onclose = function (event) {
+            console.log("WebSocket closed");
+            console.log(event.code);
+        };
+
+        socket.onmessage = function (event) {
+            var data = event.data;
+            console.log(JSON.parse(data).topic);
+            if (JSON.parse(data).topic === "HELLO") {
+                socket.close();
+                return loadSentry(ipaddress);
+            } else {
+                console.log(`${ipaddress} didn work`);
+                return onRecursiveError(recursive, zeroConfResponse, i);
+            }
+        };
+    }
 }
 
 module.exports = { isThisSentry, isThisSentryRecursive };

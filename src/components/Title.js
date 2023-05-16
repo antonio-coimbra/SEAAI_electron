@@ -1,12 +1,10 @@
 import "../css/Title.css";
 
-function Title() {
+function Title({ subtitle }) {
     return (
         <div className="title">
             <div className="title-main">Connect to Sentry</div>
-            <div className="title-message">
-                Insert your Sentry’s IP address to connect to Sentry.
-            </div>
+            <div className="title-subtitle">{subtitle}</div>
         </div>
     );
 }

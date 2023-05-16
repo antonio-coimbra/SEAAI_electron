@@ -24,7 +24,7 @@ function recursiveIPCheck(response, i) {
                     ? response.answers[i].data
                     : null
                 : null;
-            console.log(`zeroconf: ${ipFromZeroConf}`);
+            console.log(`trying ip: ${ipFromZeroConf}`);
             return isThisSentryRecursive(
                 ipFromZeroConf,
                 recursiveLoadSentry,
@@ -63,12 +63,12 @@ function zeroconf(mainWindow) {
 
     // close the connection after 3 seconds
     // Send app to insert ip state
-    setTimeout(() => {
-        if (!appIsConnected) {
-            console.log("auto connect timeout");
-            onError(mainWindow);
-        }
-    }, 10000);
+    // setTimeout(() => {
+    //     if (!appIsConnected) {
+    //         console.log("auto connect timeout");
+    //         onError(mainWindow);
+    //     }
+    // }, 10000);
 }
 
 ipcMain.handle(channels.CANCEL_AUTO_CONNECT, () => {

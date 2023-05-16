@@ -10,6 +10,7 @@ module.exports = {
         CONNECTING_STATE: "connecting",
         AUTO_CONNECTION_STATE: "auto-connection",
         CONNECTED: "connected",
+        RETRY_AUTO_CONNECTION_STATE: "retry-auto-connection",
     },
     channels: {
         SEND_IP: "send-ip",

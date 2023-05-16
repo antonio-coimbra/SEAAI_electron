@@ -6,6 +6,7 @@ import ErrorMessage from "./ErrorMessage";
 import { ReactComponent as Logo } from "../images/sea-ai-logo.svg";
 import { ReactComponent as SearchIcon } from "../images/search.svg";
 import { appStates } from "../shared/constants";
+import HelpMenu from "../components/HelpMenu";
 
 let error = null;
 
@@ -20,30 +21,46 @@ function SetConnection({
         setAppState(appStates.AUTO_CONNECTION_STATE);
     }
 
-    if (appStates.ERROR_AUTO_CONNECTION_STATE) {
-        triedAutoConnect
-            ? (error = "Automatic connection failed. Please try again.")
-            : (error = null);
+    function insertIPAddress() {
+        setAppState(appStates.SELECT_IP_STATE);
     }
+
     return (
         <div className="setConnection">
-            <Logo className="setConnection-logo" />
-            <Title />
-            <IpInput
-                appState={appState}
-                setTriedAutoConnect={setTriedAutoConnect}
-            />
-            <div className="setConnection-message">
-                If you are unable to find the IP address, try to connect
-                automatically to Sentry or contact Customer Service.
+            <div className="setConnection-header">
+                <Logo className="setConnection-header-logo" />
+                <Title
+                    subtitle={
+                        appState === appStates.SELECT_IP_STATE
+                            ? "Insert your Sentry's IP address."
+                            : "We were unable to connect to Sentry, please try again."
+                    }
+                />
             </div>
-            <div className="setConnection-tryAutoConnection">
-                <StandardButton type="submit" onClick={autoConnect}>
-                    <SearchIcon />
-                    Try Automatic Connection
-                </StandardButton>
-                {error && <ErrorMessage>{error}</ErrorMessage>}
-            </div>
+            {appState === appStates.SELECT_IP_STATE && (
+                <IpInput
+                    appState={appState}
+                    setAppState={setAppState}
+                    setTriedAutoConnect={setTriedAutoConnect}
+                />
+            )}
+            {appState === appStates.RETRY_AUTO_CONNECTION_STATE && (
+                <div className="setConnection-tryAutoConnection">
+                    <StandardButton onClick={autoConnect}>
+                        Try Automatic Connection
+                    </StandardButton>
+                    <div className="setConnection-tryAutoConnection-insertIP">
+                        <div>Unable to connect?</div>
+                        <div
+                            className="setConnection-tryAutoConnection-insertIP-button"
+                            onClick={insertIPAddress}
+                        >
+                            Insert IP Adress
+                        </div>
+                    </div>
+                </div>
+            )}
+            {/* <HelpMenu className="setConnection-helpMenu" /> */}
         </div>
     );
 }

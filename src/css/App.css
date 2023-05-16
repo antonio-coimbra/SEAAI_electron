@@ -1,15 +1,26 @@
 @font-face {
-    font-family: 'Saira Condensed';
+    font-family: 'Saira-Regular';
     src: local('Saira Condensed'), url(../fonts/SairaCondensed-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Saira-Bold';
+  src: local('Saira Condensed'), url(../fonts/SairaCondensed-Bold.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Saira-Medium';
+    src: local('Saira Condensed'), url(../fonts/SairaCondensed-Medium.ttf) format('truetype');
   }
   
 body {
     margin: 0;
     background-color: #191A1A;
-    font-family: "Saira Condensed";
+    font-family: "Saira-Regular";
     color: #FFFFFF;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
 }
     
 code {
@@ -17,9 +28,17 @@ code {
       monospace;
 }
 
-.App {
+.app {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.teste  {
+  background-color: #191A1A;
+  width: 100%;
+  height: 64px;
+  position: absolute;
+  bottom: 0;
 }
