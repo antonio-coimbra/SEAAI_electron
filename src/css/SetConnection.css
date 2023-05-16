@@ -53,9 +53,16 @@
     color: var(--color-dark-mode-on-background-1)
 }
 
-.setConnection-tryAutoConnection-insertIP-button {
+.setConnection-tryAutoConnection-insertIP-link {
     cursor: pointer;
-    color: var(--color-dark-mode-accent-2);
+    color: var(--color-foundation-primary-500);
     font-family: 'Saira-Medium';
 }
 
+.setConnection-tryAutoConnection-insertIP-link:hover {
+    color: var(--color-foundation-primary-600);
+}
+
+.setConnection-tryAutoConnection-insertIP-link:active {
+    color: var(--color-foundation-primary-700);
+}

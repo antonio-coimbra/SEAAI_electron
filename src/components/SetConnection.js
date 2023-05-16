@@ -2,19 +2,14 @@ import "../css/SetConnection.css";
 import IpInput from "./IpInput";
 import Title from "./Title";
 import StandardButton from "./StandardButton";
-import ErrorMessage from "./ErrorMessage";
 import { ReactComponent as Logo } from "../images/sea-ai-logo.svg";
-import { ReactComponent as SearchIcon } from "../images/search.svg";
 import { appStates } from "../shared/constants";
-import HelpMenu from "../components/HelpMenu";
-
-let error = null;
 
 function SetConnection({
     setAppState,
     appState,
     setTriedAutoConnect,
-    triedAutoConnect,
+    // triedAutoConnect,
 }) {
     function autoConnect() {
         setTriedAutoConnect(true);
@@ -37,7 +32,7 @@ function SetConnection({
                     }
                 />
             </div>
-            {appState === appStates.SELECT_IP_STATE && (
+            {appState !== appStates.RETRY_AUTO_CONNECTION_STATE && (
                 <IpInput
                     appState={appState}
                     setAppState={setAppState}
@@ -52,7 +47,7 @@ function SetConnection({
                     <div className="setConnection-tryAutoConnection-insertIP">
                         <div>Unable to connect?</div>
                         <div
-                            className="setConnection-tryAutoConnection-insertIP-button"
+                            className="setConnection-tryAutoConnection-insertIP-link"
                             onClick={insertIPAddress}
                         >
                             Insert IP Adress
@@ -60,7 +55,6 @@ function SetConnection({
                     </div>
                 </div>
             )}
-            {/* <HelpMenu className="setConnection-helpMenu" /> */}
         </div>
     );
 }

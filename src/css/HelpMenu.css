@@ -11,13 +11,11 @@
     font-size: 16px;
     line-height: 24px;
     position: absolute;
-    background-color: var(--color-dark-mode-surface-1);
+    background-color: var(--color-dark-mode-background);
     border-radius: 8px;
     cursor: pointer;
     transition: 0.3s;
 }
-
-
 
 .helpMenu-header {
     display: flex;
@@ -29,6 +27,14 @@
     padding: 24px 0px;
     border-radius: 8px;
     gap: 8px;
+}
+
+.helpMenu:hover > .helpMenu-header {
+    background-color: var(--color-dark-mode-surface-2);
+}
+
+.helpMenu:active > .helpMenu-header {
+    background-color: var(--color-dark-mode-surface-3);
 }
 
 .helpMenu-header svg>path {

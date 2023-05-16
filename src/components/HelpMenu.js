@@ -5,7 +5,7 @@ import { ReactComponent as ChevronDown } from "../images/chevron-down.svg";
 
 function HelpMenu() {
     const [isOpen, setIsOpen] = useState(false);
-    const [height, setHeight] = useState(64);
+    const [height, setHeight] = useState(312);
     const ref = useRef(null);
 
     function helpMenu() {
@@ -15,6 +15,7 @@ function HelpMenu() {
     function getSize() {
         if (ref.current) {
             setHeight(ref.current.clientHeight);
+            console.log(height);
         }
     }
 

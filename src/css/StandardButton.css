@@ -19,3 +19,16 @@
     white-space: nowrap;
     gap: 8px;
 }
+
+.standardButton:hover {
+    background: var(--color-foundation-primary-600);
+}
+
+.standardButton:active {
+    background: var(--color-foundation-primary-700);
+}
+
+/* .standardButton:focus {
+    background: var(--color-foundation-primary-600);
+    border: 2px solid var(--color-foundation-primary-300);  
+} */

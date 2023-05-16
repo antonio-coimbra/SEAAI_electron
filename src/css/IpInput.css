@@ -50,12 +50,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-dark-mode-accent-2);
+    color: var(--color-foundation-primary-500);
     font-family: 'Saira-Medium';
     cursor: pointer;
     gap: 8px;
 }
 
 .ipInput-goBack svg>path {
-    fill: var(--color-dark-mode-accent-2);
+    fill: var(--color-foundation-primary-500);
+}
+
+.ipInput-goBack:hover {
+    color: var(--color-foundation-primary-600);
+}
+
+.ipInput-goBack:hover svg>path {
+    fill: var(--color-foundation-primary-600);
+}
+
+.ipInput-goBack:active {
+    color: var(--color-foundation-primary-700);
+}
+
+.ipInput-goBack:active svg>path {
+    fill: var(--color-foundation-primary-700);
 }

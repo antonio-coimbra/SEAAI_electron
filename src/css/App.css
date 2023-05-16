@@ -15,7 +15,7 @@
   
 body {
     margin: 0;
-    background-color: #191A1A;
+    background-color: var(--color-dark-mode-background);
     font-family: "Saira-Regular";
     color: #FFFFFF;
     -webkit-font-smoothing: antialiased;
@@ -35,8 +35,8 @@ code {
     justify-content: center;
 }
 
-.teste  {
-  background-color: #191A1A;
+.app-hideHelpMenu  {
+  background-color: var(--color-dark-mode-background);
   width: 100%;
   height: 64px;
   position: absolute;
