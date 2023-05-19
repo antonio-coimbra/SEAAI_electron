@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/IpInput.css";
 import StandardButton from "./StandardButton";
 import ErrorMessage from "./ErrorMessage";
@@ -6,10 +6,10 @@ import { ReactComponent as ChevronLeft } from "../images/chevron-left.svg";
 const { regEx, appStates } = require("../shared/constants");
 let error = null;
 
-function IpInput({ appState, setAppState, setTriedAutoConnect }) {
+function IpInput({ appState, setAppState, setTriedAutoConnect, startInput, setStartInput }) {
     const [valid, setValid] = useState(false); //true only for testing
-    const [input, setInput] = useState(""); // 172.17.86.153 only for testing
     const [subFailed, setSubFailed] = useState(false);
+    const [input, setInput] = useState(startInput); // 172.17.86.153 only for testing
 
     switch (appState) {
         default: {
@@ -32,10 +32,10 @@ function IpInput({ appState, setAppState, setTriedAutoConnect }) {
 
     function handleUserInput(e) {
         error = false;
-        const input = e.target.value.trim();
+        const trimedInput = e.target.value.trim();
 
-        setValid(regEx.test(input));
-        setInput(input);
+        setValid(regEx.test(trimedInput));
+        setInput(trimedInput);
         if (input === "") {
             setSubFailed(false);
         }
@@ -49,6 +49,7 @@ function IpInput({ appState, setAppState, setTriedAutoConnect }) {
         if (valid) {
             setSubFailed(false);
             console.log(`Submited IP: ${input}`);
+            setStartInput(input);
             window.api.sendIP(input);
         }
     }

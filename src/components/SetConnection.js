@@ -9,7 +9,8 @@ function SetConnection({
     setAppState,
     appState,
     setTriedAutoConnect,
-    // triedAutoConnect,
+    startInput,
+    setStartInput
 }) {
     function autoConnect() {
         setTriedAutoConnect(true);
@@ -37,6 +38,8 @@ function SetConnection({
                     appState={appState}
                     setAppState={setAppState}
                     setTriedAutoConnect={setTriedAutoConnect}
+                    startInput={startInput}
+                    setStartInput={setStartInput}
                 />
             )}
             {appState === appStates.RETRY_AUTO_CONNECTION_STATE && (

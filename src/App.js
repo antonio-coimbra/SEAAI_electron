@@ -8,12 +8,12 @@ import HelpMenu from "./components/HelpMenu";
 import "./css/App.css";
 
 function App() {
-    // debugger;
     const [appState, setAppState] = useState(
         appStates.RETRY_AUTO_CONNECTION_STATE
     );
     const [triedAutoConnect, setTriedAutoConnect] = useState(false);
     const [isMacOs, setIsMacOS] = useState(null);
+    const [startInput, setStartInput] = useState("");
 
     useEffect(() => {
         // Listen for the event
@@ -49,6 +49,8 @@ function App() {
                         error={false}
                         setTriedAutoConnect={setTriedAutoConnect}
                         triedAutoConnect={triedAutoConnect}
+                        startInput={startInput}
+                        setStartInput={setStartInput}
                     />
                     <HelpMenu className="app-helpMenu" />
                     <div className="app-hideHelpMenu"></div>

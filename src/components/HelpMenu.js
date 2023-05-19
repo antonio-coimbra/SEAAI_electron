@@ -15,7 +15,6 @@ function HelpMenu() {
     function getSize() {
         if (ref.current) {
             setHeight(ref.current.clientHeight);
-            console.log(height);
         }
     }
 
