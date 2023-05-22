@@ -1,6 +1,7 @@
 const { channels } = require("../src/shared/constants");
 const { contextBridge, ipcRenderer } = require("electron");
 const { isMac } = require("./helpers/detectPlatform");
+const { lastIP } = require("./helpers/settings");
 
 const API = {
     sendIP: (input) => ipcRenderer.invoke(channels.SEND_IP, input),
@@ -21,7 +22,9 @@ const API = {
 
     getAppState: (setAppState) =>
         ipcRenderer.on(channels.APP_STATE, (event, appState) => {
+            // Set the app state to the renderer process
             setAppState(appState);
+            // Send the app state to the main process
             ipcRenderer.send(channels.ELECTRON_APP_STATE, appState);
         }),
     getIsMaximized: (setIsMaximized) =>
@@ -30,6 +33,10 @@ const API = {
         }),
     getOpSystem: (setIsMacOS) => {
         setIsMacOS(isMac);
+    },
+
+    getLastIP: (setLastIP) => {
+        setLastIP(lastIP);
     },
 };
 

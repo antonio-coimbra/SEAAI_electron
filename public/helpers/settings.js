@@ -3,6 +3,7 @@ const storage = new Store();
 
 const WINDOW_BOUNDS = "window-bounds";
 const WAS_MAXIMIZED = "was-maximized";
+const LAST_IP = "last-ip";
 
 function getWindowSavedBounds() {
     const defaultBounds = [1800, 850];
@@ -26,6 +27,19 @@ function getWasMaximized() {
     }
 }
 
+function getLastIP() {
+    const lastIP = storage.get(LAST_IP);
+    if (lastIP) return lastIP;
+    else {
+            return "";
+    }
+}
+
+function saveLastIP(ip) {
+    console.log(`saving last ip to ${ip}`);
+    storage.set(LAST_IP, ip);
+}
+
 function saveWindowBounds(bounds) {
     storage.set(WINDOW_BOUNDS, bounds);
 }
@@ -34,9 +48,13 @@ function setWasMaximized(wasMaximized) {
     storage.set(WAS_MAXIMIZED, wasMaximized);
 }
 
+const lastIP = getLastIP();
+
 module.exports = {
     getWindowSavedBounds,
     saveWindowBounds,
     getWasMaximized,
     setWasMaximized,
+    lastIP,
+    saveLastIP
 };

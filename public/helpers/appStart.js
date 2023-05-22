@@ -56,6 +56,7 @@ function startAplication() {
         .then(() => {
             const { title } = require("../../package.json");
             mainWindow.setTitle(`${title}`);
+            mainWindow.maximize();
             mainWindow.show();
         });
 
@@ -65,7 +66,7 @@ function startAplication() {
     }
 
     // Catch the window "move", "resize" and "close" events
-    // and re-center the BrowserView if it is already defined
+    // and re-center the BrowserView
     mainWindow.on("move", () => {
         setViewBounds();
     });
@@ -174,30 +175,6 @@ ipcMain.handle(channels.MINIMIZE, () => {
 // Top bar maximize button handling
 ipcMain.handle(channels.MAXIMIZE, () => {
     mainWindow.isMaximized() ? mainWindow.restore() : mainWindow.maximize();
-});
-
-// (Not implemented) fullscreen button handling
-ipcMain.handle(channels.SET_FULLSCREEN, () => {
-    const bounds = mainWindow.getBounds();
-    const browserViewActive =
-        appBrowserView.getBounds().width !== 0 ||
-        appBrowserView.getBounds().height !== 0;
-    if (browserViewActive && mainWindow.isFullScreen()) {
-        appBrowserView.setBounds({
-            x: 0,
-            y: TITLE_BAR_HEIGHT,
-            width: bounds.width,
-            height: bounds.height - TITLE_BAR_HEIGHT,
-        });
-    } else if (browserViewActive && !mainWindow.isFullScreen()) {
-        appBrowserView.setBounds({
-            x: 0,
-            y: 0,
-            width: bounds.width,
-            height: bounds.height,
-        });
-    }
-    mainWindow.setFullScreen(!mainWindow.isFullScreen());
 });
 
 function getMainWindow() {

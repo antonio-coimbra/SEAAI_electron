@@ -24,6 +24,7 @@ function App() {
     useEffect(() => {
         // Listen for the event
         window.api.getOpSystem(setIsMacOS);
+        window.api.getLastIP(setStartInput);
     }, []);
 
     console.log(appState);

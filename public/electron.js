@@ -60,11 +60,6 @@ ipcMain.handle(channels.SEND_IP, (event, ipaddress) => {
 });
 
 ipcMain.handle(channels.AUTO_CONNECT, () => {
-    // setTimeout(() => {
-    //     console.log("auto-connecting started");
-    //     zeroconf();
-    // }, 3000);
-
     // Check if there is internet connection
     if (!net.isOnline()) {
         console.log("No internet connection");

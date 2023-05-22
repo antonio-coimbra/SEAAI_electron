@@ -5,7 +5,7 @@ const {
     BROWSER_VIEW_INIT,
 } = require("./appStart");
 const { channels, appStates } = require("../../src/shared/constants");
-const { getWindowSavedBounds, getWasMaximized } = require("./settings");
+const { getWindowSavedBounds, getWasMaximized, saveLastIP } = require("./settings");
 
 function onSuccess(SUCCESS) {
     const bounds = getWindowSavedBounds();
@@ -26,6 +26,7 @@ function onSuccess(SUCCESS) {
 
 function recursiveLoadSentry(ipaddress, i, response, recursive) {
     if (ipaddress === null || ipaddress === undefined) {
+        return recursive(response, i + 1);
     }
     // The SUCCESS variable is needed because even when the app fails to load,
     // the "did-finish-load" event is emmited eventually
@@ -66,6 +67,7 @@ function simpleLoadSentry(ipaddress) {
 
     appBrowserView.webContents.once("did-finish-load", () => {
         console.log("borwserView: did-finish-load");
+        saveLastIP(ipaddress);
         return onSuccess(SUCCESS);
     });
 

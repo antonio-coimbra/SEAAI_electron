@@ -24,6 +24,7 @@ module.exports = {
         AUTO_CONNECT: "auto-connect",
         CANCEL_AUTO_CONNECT: "cancel-auto-connect",
         OP_SYSTEM: "os-channel",
+        LAST_IP: "last-ip",
     },
     regEx,
     SET_FULLSCREEN: "set-fullscreen",

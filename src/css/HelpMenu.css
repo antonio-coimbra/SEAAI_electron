@@ -50,6 +50,7 @@
     width: 100%;
     gap: 48px;
     padding: 48px 0px;
+    border-radius: 8px;
 }
 
 .helpMenu-content-problems > ul > li {
