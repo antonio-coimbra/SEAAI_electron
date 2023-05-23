@@ -26,7 +26,13 @@ function HelpMenu() {
             onClick={helpMenu}
             style={{ bottom: isOpen ? `${64}px` : `${-height + 64}px` }}
         >
-            <div className="helpMenu-header">
+            <div
+                className="helpMenu-header"
+                style={{
+                    borderBottomLeftRadius: isOpen ? "0px" : "8px",
+                    borderBottomRightRadius: isOpen ? "0px" : "8px",
+                }}
+            >
                 Help & Support{isOpen ? <ChevronDown /> : <ChevronUp />}
             </div>
             <div className="helpMenu-content" ref={ref}>
@@ -44,13 +50,27 @@ function HelpMenu() {
                     <div className="helpMenu-content-service-contacts">
                         <div>
                             <p>Phone:</p>
-                            <p className="helpMenu-content-service-contacts-item">
+                            <p
+                                className="helpMenu-content-service-contacts-item"
+                                onClick={() => {
+                                    navigator.clipboard.writeText(
+                                        "+33699726241"
+                                    );
+                                }}
+                            >
                                 +33 699 72 62 41
                             </p>
                         </div>
                         <div>
                             <p>Email:</p>
-                            <p className="helpMenu-content-service-contacts-item">
+                            <p
+                                className="helpMenu-content-service-contacts-item"
+                                onClick={() => {
+                                    navigator.clipboard.writeText(
+                                        "service@sea.ai"
+                                    );
+                                }}
+                            >
                                 service@sea.ai
                             </p>
                         </div>
