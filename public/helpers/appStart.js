@@ -23,99 +23,101 @@ let mainWindow;
 let appBrowserView;
 
 function startAplication() {
-    // Create the browser window.
-    mainWindow = new BrowserWindow({
-        width: 970,
-        height: 750,
-        minWidth: 970,
-        minHeight: 750,
-        titleBarStyle: "hidden",
-        show: false,
-        backgroundColor: "#191A1A",
-        icon: path.join(__dirname, "../icon.ico"),
-        webPreferences: {
-            contextIsolation: true,
-            nodeIntegration: true,
-            preload: path.join(__dirname, "../preload.js"),
-            // devTools: false, // UNCOMMENT ON RELEASE
-        },
-    });
-
-    appBrowserView = new BrowserView();
-    mainWindow.setBrowserView(appBrowserView);
-
-    // In production, set the initial browser path to the local bundle generated
-    // by the Create React App build process.
-    // In development, set it to localhost to allow live/hot-reloading.
-    mainWindow
-        .loadURL(
-            app.isPackaged
-                ? `file://${path.join(__dirname, "../index.html")}`
-                : "http:localhost:3000"
-        )
-        .then(() => {
-            const { title } = require("../../package.json");
-            mainWindow.setTitle(`${title}`);
-            mainWindow.maximize();
-            mainWindow.show();
+    app.whenReady().then(() => {
+        // Create the browser window.
+        mainWindow = new BrowserWindow({
+            width: 970,
+            height: 750,
+            minWidth: 970,
+            minHeight: 750,
+            titleBarStyle: "hidden",
+            show: false,
+            backgroundColor: "#191A1A",
+            icon: path.join(__dirname, "../icon.ico"),
+            webPreferences: {
+                contextIsolation: true,
+                nodeIntegration: true,
+                preload: path.join(__dirname, "../preload.js"),
+                // devTools: false, // UNCOMMENT ON RELEASE
+            },
         });
 
-    // Automatically open Chrome's DevTools in development mode.
-    if (!app.isPackaged) {
-        mainWindow.webContents.openDevTools({ mode: "detach" });
-    }
+        appBrowserView = new BrowserView();
+        mainWindow.setBrowserView(appBrowserView);
 
-    // Catch the window "move", "resize" and "close" events
-    // and re-center the BrowserView
-    mainWindow.on("move", () => {
-        setViewBounds();
-    });
-    mainWindow.on("resize", () => {
-        setViewBounds();
-    });
-    mainWindow.on("restore", () => {
-        setViewBounds();
-    });
+        // In production, set the initial browser path to the local bundle generated
+        // by the Create React App build process.
+        // In development, set it to localhost to allow live/hot-reloading.
+        mainWindow
+            .loadURL(
+                app.isPackaged
+                    ? `app://${path.join(__dirname, "../index.html")}`
+                    : "http:localhost:3000"
+            )
+            .then(() => {
+                const { title } = require("../../package.json");
+                mainWindow.setTitle(`${title}`);
+                mainWindow.maximize();
+                mainWindow.show();
+            });
 
-    // Send maximize and unmaximize info to the renderer
-    mainWindow.on("unmaximize", () => {
-        mainWindow.webContents.send(channels.MAXRES, false);
-        const browserViewActive =
-            appBrowserView.getBounds().width !== 0 ||
-            appBrowserView.getBounds().height !== 0;
-        if (browserViewActive) setWasMaximized(false);
-    });
-    mainWindow.on("maximize", () => {
-        mainWindow.webContents.send(channels.MAXRES, true);
-        const browserViewActive =
-            appBrowserView.getBounds().width !== 0 ||
-            appBrowserView.getBounds().height !== 0;
-        if (browserViewActive) setWasMaximized(true);
-    });
-
-    mainWindow.on("resized", () => {
-        saveWindowBounds(mainWindow.getSize());
-    });
-    mainWindow.once("focus", () => mainWindow.flashFrame(false));
-
-    globalShortcut.register("F11", () => {
-        const browserViewActive =
-            appBrowserView.getBounds().width !== 0 ||
-            appBrowserView.getBounds().height !== 0;
-
-        // Fullscreen mode is only available when the app is connected
-        if (browserViewActive) {
-            if (!mainWindow.isFullScreen()) {
-                mainWindow.setFullScreen(!mainWindow.isFullScreen());
-                setViewBounds(SET_FULLSCREEN);
-            }
+        // Automatically open Chrome's DevTools in development mode.
+        if (!app.isPackaged) {
+            mainWindow.webContents.openDevTools({ mode: "detach" });
         }
-    });
-    globalShortcut.register("esc", () => {
-        if (mainWindow.isFullScreen()) {
-            mainWindow.setFullScreen(!mainWindow.isFullScreen());
+
+        // Catch the window "move", "resize" and "close" events
+        // and re-center the BrowserView
+        mainWindow.on("move", () => {
             setViewBounds();
-        }
+        });
+        mainWindow.on("resize", () => {
+            setViewBounds();
+        });
+        mainWindow.on("restore", () => {
+            setViewBounds();
+        });
+
+        // Send maximize and unmaximize info to the renderer
+        mainWindow.on("unmaximize", () => {
+            mainWindow.webContents.send(channels.MAXRES, false);
+            const browserViewActive =
+                appBrowserView.getBounds().width !== 0 ||
+                appBrowserView.getBounds().height !== 0;
+            if (browserViewActive) setWasMaximized(false);
+        });
+        mainWindow.on("maximize", () => {
+            mainWindow.webContents.send(channels.MAXRES, true);
+            const browserViewActive =
+                appBrowserView.getBounds().width !== 0 ||
+                appBrowserView.getBounds().height !== 0;
+            if (browserViewActive) setWasMaximized(true);
+        });
+
+        mainWindow.on("resized", () => {
+            saveWindowBounds(mainWindow.getSize());
+        });
+        mainWindow.once("focus", () => mainWindow.flashFrame(false));
+
+        globalShortcut.register("F11", () => {
+            const browserViewActive =
+                appBrowserView.getBounds().width !== 0 ||
+                appBrowserView.getBounds().height !== 0;
+
+            // Fullscreen mode is only available when the app is connected
+            if (browserViewActive) {
+                if (!mainWindow.isFullScreen()) {
+                    mainWindow.setFullScreen(!mainWindow.isFullScreen());
+                    setViewBounds(SET_FULLSCREEN);
+                }
+            }
+        });
+        globalShortcut.register("esc", () => {
+            if (mainWindow.isFullScreen()) {
+                mainWindow.setFullScreen(!mainWindow.isFullScreen());
+                setViewBounds();
+            }
+        });
     });
 }
 
