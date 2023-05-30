@@ -66,7 +66,7 @@ function zeroconf(mainWindow) {
     setTimeout(() => {
         if (!appIsConnected) {
             console.log("auto connect timeout");
-            onError(mainWindow);
+            onError();
         }
     }, 15000);
 }
