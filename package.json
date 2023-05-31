@@ -27,7 +27,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://172.17.86.197:3000  && electronmon .\"",
+    "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000  && electronmon .\"",
     "package:mac": "npm run build && electron-builder -m -c.extraMetadata.main=build/electron.js",
     "package:win": "npm run build && electron-builder -w -c.extraMetadata.main=build/electron.js",
     "package:linux": "npm run build && electron-builder -l -c.extraMetadata.main=build/electron.js"

@@ -16,15 +16,18 @@ function onErrorUserInput(socket) {
     return null;
 }
 
-function onErrorAuto(socket) {
+function onErrorAuto() {
     const mainWindow = getMainWindow();
-    socket.close();
+    mainWindow.webContents.send(
+        channels.APP_STATE,
+        appStates.RETRY_AUTO_CONNECTION_STATE
+    );
     return null;
 }
 
-function onSuccess(socket, ipaddress) {
+function onSuccess(socket, ipaddress, cameFromAutoConnect) {
     socket.close();
-    return loadSentry(ipaddress);
+    return loadSentry(ipaddress, cameFromAutoConnect);
 }
 
 function isThisSentryUserInput(ipaddress) {
@@ -40,8 +43,7 @@ function isThisSentryUserInput(ipaddress) {
     });
 
     socket.on("close", (event) => {
-        console.log("WebSocket closed: " + event);
-        // return onError(socket);
+        // console.log("WebSocket closed: " + event);
     });
 
     socket.on("message", (data) => {
@@ -55,7 +57,20 @@ function isThisSentryUserInput(ipaddress) {
     });
 }
 
-function isThisSentryAuto(ipaddress) {
+function isThisSentryAuto(IPs) {
+    return recursiveIPValidator(IPs, 0);
+}
+
+function recursiveIPValidator(IPs, i) {
+    if (i >= IPs.length) {
+        console.log("No more IPs to validate. Exiting auto connection");
+        return onErrorAuto();
+    }
+
+    console.log("attempting to connect to " + IPs[i]);
+
+    let wentNextIP = false;
+    const ipaddress = IPs[i];
     const socket = new WebSocket(
         "ws://" + ipaddress + ":" + SIGNAL_SERVER_PORT + SIGNAL_SERVER_URL
     );
@@ -64,21 +79,35 @@ function isThisSentryAuto(ipaddress) {
         console.log("WebSocket error");
         message = event.message;
         console.log(message);
-        onErrorAuto(socket);
+        socket.close();
+        if (!wentNextIP) {
+            wentNextIP = true;
+            return recursiveIPValidator(IPs, i + 1);
+        }
     });
 
     socket.on("close", (event) => {
-        console.log("WebSocket closed: " + event);
-        // return onError(socket);
+        // console.log(ipaddress + " webSocket closed: " + event);
     });
 
     socket.on("message", (data) => {
         const message = data ? JSON.parse(data).topic : null;
         if (message === SENTRY_RESPONSE) {
-            onSuccess(socket, ipaddress);
+            if (i === -1) {
+                socket.close();
+                if (!wentNextIP) {
+                    wentNextIP = true;
+                    return recursiveIPValidator(IPs, i + 1);
+                }
+            }
+            return onSuccess(socket, ipaddress, (cameFromAutoConnect = true));
         } else {
             console.log(`${ipaddress} didn't work`);
-            return onErrorAuto(socket);
+            socket.close();
+            if (!wentNextIP) {
+                wentNextIP = true;
+                return recursiveIPValidator(IPs, i + 1);
+            }
         }
     });
 }

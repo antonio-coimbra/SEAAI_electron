@@ -67,7 +67,10 @@ ipcMain.handle(channels.AUTO_CONNECT, () => {
             channels.APP_STATE,
             appStates.NO_CONNECTION_ERROR_STATE
         );
-    } else zeroconf(getMainWindow());
+    } else {
+        // TRY LAST CONNECTED IP HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+        zeroconf(getMainWindow());
+    }
 });
 
 // If your app has no need to navigate or only needs to navigate to known pages,

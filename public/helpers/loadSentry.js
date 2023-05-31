@@ -31,7 +31,7 @@ function onSuccess(SUCCESS) {
     } else return false;
 }
 
-function loadSentry(ipaddress) {
+function loadSentry(ipaddress, cameFromAutoConnect) {
     // The SUCCESS variable is needed because even when the app fails to load,
     // the "did-finish-load" event is emmited eventually
     let loadedSentry = true;
@@ -66,7 +66,6 @@ function loadSentry(ipaddress) {
 
 ipcMain.on(channels.ELECTRON_APP_STATE, (event, currentState) => {
     appIsConnected = currentState === appStates.CONNECTED ? true : false;
-    console.log("appIsConnected in LoadSentry: ", appIsConnected);
 });
 
 module.exports = { loadSentry };

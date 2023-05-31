@@ -7,6 +7,7 @@ const { isAlive } = require("./isAlive");
 
 let appIsConnected = false;
 let gotResponse = false;
+let sentryIsConnected = false;
 const possibleIPs = [];
 const aliveIPs = [];
 
@@ -26,7 +27,7 @@ function zeroconf() {
             mdns.destroy(); // closes the socket
 
             for (let i = 0; i < response.answers.length; i++) {
-                console.log("oscar.local IP:" + response.answers[i].data);
+                console.log("oscar.local IP: " + response.answers[i].data);
                 possibleIPs.push(response.answers[i].data);
             }
 
@@ -55,19 +56,10 @@ function zeroconf() {
                             aliveIPs.indexOf(possibleIPs[i]) === 0 &&
                             ipIsAlive
                         ) {
-                            console.log(
-                                "This IP will be attempted" + possibleIPs[i]
-                            );
-                        } else if (aliveIPs.length > 0 && ipIsAlive) {
-                            console.log(
-                                "This IP will NOT be attempted" + possibleIPs[i]
-                            );
-                        } else if (!ipIsAlive) {
-                            console.log(
-                                "This IP is not reachable" + possibleIPs[i]
-                            );
+                            sentryIsConnected = isThisSentryAuto(aliveIPs);
                         }
                     });
+                if (sentryIsConnected) break;
             }
         }
     });
@@ -98,6 +90,7 @@ ipcMain.handle(channels.CANCEL_AUTO_CONNECT, () => {
 
 ipcMain.on(channels.ELECTRON_APP_STATE, (event, currentState) => {
     appIsConnected = currentState === appStates.CONNECTED ? true : false;
+    if (appIsConnected) mdns.destroy();
 });
 
 module.exports = { zeroconf };

@@ -8,9 +8,7 @@ import HelpMenu from "./components/HelpMenu";
 import "./css/App.css";
 
 function App() {
-    const [appState, setAppState] = useState(
-        appStates.RETRY_AUTO_CONNECTION_STATE
-    );
+    const [appState, setAppState] = useState(appStates.AUTO_CONNECTION_STATE);
     const [triedAutoConnect, setTriedAutoConnect] = useState(false);
     const [isMacOs, setIsMacOS] = useState(null);
     const [startInput, setStartInput] = useState("");
