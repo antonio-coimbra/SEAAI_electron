@@ -33,4 +33,5 @@ module.exports = {
     SIGNAL_SERVER_URL: "/websocket/app",
     TITLE_BAR_HEIGHT: 32,
     MAC_TITLE_BAR_HEIGHT: 32,
+    SENTRY_RESPONSE: "HELLO",
 };

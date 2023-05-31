@@ -6,6 +6,7 @@ const { channels, appStates } = require("../../src/shared/constants");
 const mdns = require("multicast-dns")();
 
 let appIsConnected = false;
+let gotResponse = false;
 
 function onError() {
     // go to error page and manual ip insertion
@@ -18,13 +19,14 @@ function onError() {
 
 function recursiveIPCheck(response, i) {
     if (i < response.answers.length) {
-        if (response.answers[i].name.includes("oscar.local") && response) {
+        if (response) {
             let ipFromZeroConf = response
                 ? response.answers[i]
                     ? response.answers[i].data
                     : null
                 : null;
             console.log(`trying ip: ${ipFromZeroConf}`);
+            //return recursiveIPCheck(response, i + 1);
             return isThisSentryRecursive(
                 ipFromZeroConf,
                 recursiveLoadSentry,
@@ -33,22 +35,34 @@ function recursiveIPCheck(response, i) {
                 recursiveIPCheck
             );
         } else return -1;
-    } else return -1;
+    } else onError();
 }
 
 function zeroconf(mainWindow) {
     mdns.on("response", function (response) {
-        mdns.destroy(); // closes the socket
-        let i = 0;
-        const res = recursiveIPCheck(response, i);
-        if (res === -1 || res === null) {
-            console.log(`recursiveIPCheck FAILED`);
-            onError();
-        } else if (res === 0) {
-            console.log(`recursiveIPCheck didn't return`);
-            onError();
-        } else {
-            console.log(`recursiveIPCheck returned: ${res}`);
+        if (response.answers[0].name.includes("oscar") || true) {
+            for (let i = 0; i < response.answers.length; i++) {
+                console.log(response.answers[i]);
+            }
+
+            mdns.destroy(); // closes the socket
+
+            //Got a response form oscar.local
+            gotResponse = true;
+
+            let i = 0;
+            const res = recursiveIPCheck(response, i);
+            if (res === -1 || res === null) {
+                console.log(`recursiveIPCheck FAILED`);
+                onError();
+            } else if (res === 0) {
+                console.log(`recursiveIPCheck didn't return`);
+                onError();
+            } else {
+                console.log(`recursiveIPCheck returned: ${res}`);
+            }
+
+            return recursiveIPCheck(response, 0);
         }
     });
 
@@ -56,7 +70,8 @@ function zeroconf(mainWindow) {
         questions: [
             {
                 name: "oscar.local",
-                type: "A",
+                //name: "oscar.local",
+                type: "*",
             },
         ],
     });
@@ -64,11 +79,11 @@ function zeroconf(mainWindow) {
     // close the connection after 15 seconds
     // Send app to insert ip state
     setTimeout(() => {
-        if (!appIsConnected) {
+        if (!appIsConnected && !gotResponse) {
             console.log("auto connect timeout");
             onError(mainWindow);
         }
-    }, 15000);
+    }, 20000);
 }
 
 ipcMain.handle(channels.CANCEL_AUTO_CONNECT, () => {
