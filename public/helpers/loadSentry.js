@@ -1,3 +1,4 @@
+const { ipcMain } = require("electron");
 const {
     getMainWindow,
     getAppBrowserView,
@@ -11,10 +12,12 @@ const {
     saveLastIP,
 } = require("./settings");
 
+appIsConnected = false;
+
 function onSuccess(SUCCESS) {
     const bounds = getWindowSavedBounds();
     const mainWindow = getMainWindow();
-    if (SUCCESS) {
+    if (SUCCESS && !appIsConnected) {
         // If the IP address is valid, render only the TitleBar component
         mainWindow.webContents.send(channels.APP_STATE, appStates.CONNECTED);
         mainWindow.setContentSize(bounds[0], bounds[1]);
@@ -25,50 +28,13 @@ function onSuccess(SUCCESS) {
 
         if (getWasMaximized) mainWindow.maximize();
         return SUCCESS;
-    } else return !SUCCESS;
+    } else return false;
 }
 
-function recursiveLoadSentry(ipaddress, i, response, recursive) {
-    if (ipaddress === null || ipaddress === undefined) {
-        return recursive(response, i + 1);
-    }
-
-    if (i == 0) {
-        return recursive(response, i + 1);
-    }
+function loadSentry(ipaddress) {
     // The SUCCESS variable is needed because even when the app fails to load,
     // the "did-finish-load" event is emmited eventually
-    let SUCCESS = true;
-    const appBrowserView = getAppBrowserView();
-
-    console.log(`automatic loading ip:${ipaddress}`);
-
-    appBrowserView.webContents.once("did-finish-load", () => {
-        console.log("borwserView: did-finish-load");
-        return onSuccess(SUCCESS);
-    });
-
-    appBrowserView.webContents.on("did-fail-load", () => {
-        SUCCESS = false;
-        console.log("BrowserView: did-fail-load");
-        return recursive(response, i + 1);
-    });
-
-    appBrowserView.webContents.on("unresponsive", () => {
-        SUCCESS = false;
-        console.log("BrowserView: unresponsive");
-        return recursive(response, i + 1);
-    });
-
-    const url = `http://${ipaddress}/?${Date.now()}`;
-    appBrowserView.webContents.loadURL(url);
-    // mainWindow.webContents.loadURL(url); // appears to be usefull because it shows more info in the dev tools
-}
-
-function simpleLoadSentry(ipaddress) {
-    // The SUCCESS variable is needed because even when the app fails to load,
-    // the "did-finish-load" event is emmited eventually
-    let SUCCESS = true;
+    let loadedSentry = true;
 
     const mainWindow = getMainWindow();
     const appBrowserView = getAppBrowserView();
@@ -76,21 +42,21 @@ function simpleLoadSentry(ipaddress) {
     appBrowserView.webContents.once("did-finish-load", () => {
         console.log("borwserView: did-finish-load");
         saveLastIP(ipaddress);
-        return onSuccess(SUCCESS);
+        return onSuccess(loadedSentry);
     });
 
     appBrowserView.webContents.on("did-fail-load", () => {
-        SUCCESS = false;
+        loadedSentry = false;
         console.log("BrowserView: did-fail-load");
         mainWindow.webContents.send(channels.APP_STATE, "error");
-        return SUCCESS;
+        return loadedSentry;
     });
 
     appBrowserView.webContents.on("unresponsive", () => {
-        SUCCESS = false;
+        loadedSentry = false;
         console.log("BrowserView: unresponsive");
         mainWindow.webContents.send(channels.APP_STATE, "error");
-        return SUCCESS;
+        return loadedSentry;
     });
 
     const url = `http://${ipaddress}/?${Date.now()}`;
@@ -98,4 +64,9 @@ function simpleLoadSentry(ipaddress) {
     // mainWindow.webContents.loadURL(url); // appears to be usefull because it shows more info in the dev tools
 }
 
-module.exports = { recursiveLoadSentry, simpleLoadSentry };
+ipcMain.on(channels.ELECTRON_APP_STATE, (event, currentState) => {
+    appIsConnected = currentState === appStates.CONNECTED ? true : false;
+    console.log("appIsConnected in LoadSentry: ", appIsConnected);
+});
+
+module.exports = { loadSentry };

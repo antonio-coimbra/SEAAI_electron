@@ -2,8 +2,8 @@ const { app, ipcMain, BrowserWindow, net, protocol } = require("electron");
 const { startAplication, getMainWindow } = require("./helpers/appStart");
 const { zeroconf } = require("./helpers/zeroconf");
 const { channels, appStates } = require("../src/shared/constants");
-const { isThisSentry } = require("./helpers/isThisSentry");
-const { simpleLoadSentry } = require("./helpers/loadSentry");
+const { isThisSentryUserInput } = require("./helpers/isThisSentry");
+const { loadSentry } = require("./helpers/loadSentry");
 const path = require("path");
 
 // Setup a local proxy to adjust the paths of requested files when loading
@@ -56,7 +56,7 @@ ipcMain.handle(channels.SEND_IP, (event, ipaddress) => {
             channels.APP_STATE,
             appStates.ERROR_STATE
         );
-    } else isThisSentry(ipaddress, simpleLoadSentry);
+    } else isThisSentryUserInput(ipaddress, loadSentry);
 });
 
 ipcMain.handle(channels.AUTO_CONNECT, () => {

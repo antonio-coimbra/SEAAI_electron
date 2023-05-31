@@ -31,7 +31,7 @@ function getLastIP() {
     const lastIP = storage.get(LAST_IP);
     if (lastIP) return lastIP;
     else {
-            return "";
+        return "";
     }
 }
 
@@ -56,5 +56,5 @@ module.exports = {
     getWasMaximized,
     setWasMaximized,
     lastIP,
-    saveLastIP
+    saveLastIP,
 };

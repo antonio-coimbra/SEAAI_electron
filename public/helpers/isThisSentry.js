@@ -1,5 +1,6 @@
 const WebSocket = require("ws");
 const { getMainWindow } = require("./appStart");
+const { loadSentry } = require("./loadSentry");
 const {
     channels,
     appStates,
@@ -8,35 +9,25 @@ const {
     SENTRY_RESPONSE,
 } = require("../../src/shared/constants");
 
-let wentToNextIP;
-
-function onError(socket) {
+function onErrorUserInput(socket) {
     const mainWindow = getMainWindow();
     mainWindow.webContents.send(channels.APP_STATE, appStates.ERROR_STATE);
     socket.close();
     return null;
 }
 
-function isNotSentryError(socket) {
+function onErrorAuto(socket) {
     const mainWindow = getMainWindow();
-    mainWindow.webContents.send(
-        channels.APP_STATE,
-        appStates.ERROR_IS_NOT_SENTRY
-    );
     socket.close();
     return null;
 }
 
-function onRecursiveError(socket, recursive, response, i) {
-    if (!wentToNextIP) {
-        console.log("leaving " + response.answers[i].data);
-        socket.close();
-        wentToNextIP = true;
-        return recursive(response, i + 1);
-    }
+function onSuccess(socket, ipaddress) {
+    socket.close();
+    return loadSentry(ipaddress);
 }
 
-function isThisSentry(ipaddress, loadSentry) {
+function isThisSentryUserInput(ipaddress) {
     const socket = new WebSocket(
         "ws://" + ipaddress + ":" + SIGNAL_SERVER_PORT + SIGNAL_SERVER_URL
     );
@@ -45,74 +36,51 @@ function isThisSentry(ipaddress, loadSentry) {
         console.log("WebSocket error");
         message = event.message;
         console.log(message);
-        if (message.includes("Unexpected server response")) {
-            return isNotSentryError(socket);
-        } else if (message.includes("ETIMEDOUT")) {
-            return onError(socket);
-        } else if (message.includes("EHOSTUNREACH")) {
-            return onError(socket);
-        } else onError(socket);
+        onErrorUserInput(socket);
     });
 
     socket.on("close", (event) => {
-        console.log("WebSocket closed: " + event.code);
-        return onError(socket);
+        console.log("WebSocket closed: " + event);
+        // return onError(socket);
     });
 
-    socket.on("message", (event) => {
-        var data = event.data;
-        console.log(JSON.parse(data).topic);
-        if (JSON.parse(data).topic === SENTRY_RESPONSE) {
-            socket.close();
-            return loadSentry(ipaddress);
+    socket.on("message", (data) => {
+        const message = data ? JSON.parse(data).topic : null;
+        if (message === SENTRY_RESPONSE) {
+            onSuccess(socket, ipaddress);
         } else {
             console.log(`${ipaddress} didn't work`);
-            return onRecursiveError(recursive, zeroConfResponse, i);
+            return onErrorUserInput(socket);
         }
     });
 }
 
-function isThisSentryRecursive(
-    ipaddress,
-    loadSentry,
-    i,
-    zeroConfResponse,
-    recursive
-) {
-    wentToNextIP = false;
-
+function isThisSentryAuto(ipaddress) {
     const socket = new WebSocket(
         "ws://" + ipaddress + ":" + SIGNAL_SERVER_PORT + SIGNAL_SERVER_URL
     );
 
     socket.on("error", (event) => {
+        console.log("WebSocket error");
         message = event.message;
-        console.log("Webcocket ERROR on " + ipaddress + ": " + message);
-        return onRecursiveError(socket, recursive, zeroConfResponse, i);
+        console.log(message);
+        onErrorAuto(socket);
     });
 
     socket.on("close", (event) => {
-        console.log("WebSocket closed: " + event.code);
-        return onRecursiveError(socket, recursive, zeroConfResponse, i);
+        console.log("WebSocket closed: " + event);
+        // return onError(socket);
     });
 
     socket.on("message", (data) => {
-        console.log(data);
-        console.log(JSON.parse(data).topic);
-        if (JSON.parse(data).topic === SENTRY_RESPONSE) {
-            socket.close();
-            return loadSentry(ipaddress);
+        const message = data ? JSON.parse(data).topic : null;
+        if (message === SENTRY_RESPONSE) {
+            onSuccess(socket, ipaddress);
         } else {
             console.log(`${ipaddress} didn't work`);
-            return onRecursiveError(socket, recursive, zeroConfResponse, i);
+            return onErrorAuto(socket);
         }
     });
-
-    setTimeout(() => {
-        socket.close();
-        console.log(`${ipaddress} socket timeout`);
-        return onRecursiveError(socket, recursive, zeroConfResponse, i);
-    }, 10000);
 }
 
-module.exports = { isThisSentry, isThisSentryRecursive };
+module.exports = { isThisSentryUserInput, isThisSentryAuto };
