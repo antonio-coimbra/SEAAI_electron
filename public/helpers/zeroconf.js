@@ -56,7 +56,7 @@ function zeroconf(mainWindow) {
         questions: [
             {
                 name: "oscar.local",
-                type: "A",
+                type: "*",
             },
         ],
     });
