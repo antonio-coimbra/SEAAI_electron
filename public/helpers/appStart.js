@@ -45,7 +45,7 @@ function startAplication() {
         mainWindow = new BrowserWindow({
             width: 970,
             height: 750,
-            minWidth: 970,
+            minWidth: 520,
             minHeight: 750,
             titleBarStyle: "hidden",
             show: false,
