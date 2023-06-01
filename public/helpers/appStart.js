@@ -16,7 +16,7 @@ const {
 } = require("../../src/shared/constants");
 const { isMac } = require("./detectPlatform");
 
-const { saveWindowBounds, setWasMaximized } = require("./settings");
+const { saveWindowBounds, setWasMaximized } = require("./storage");
 const path = require("path");
 
 let mainWindow;
@@ -126,13 +126,10 @@ function startAplication() {
                 if (!mainWindow.isFullScreen()) {
                     mainWindow.setFullScreen(!mainWindow.isFullScreen());
                     setViewBounds(SET_FULLSCREEN);
+                } else {
+                    mainWindow.setFullScreen(!mainWindow.isFullScreen());
+                    setViewBounds();
                 }
-            }
-        });
-        globalShortcut.register("esc", () => {
-            if (mainWindow.isFullScreen()) {
-                mainWindow.setFullScreen(!mainWindow.isFullScreen());
-                setViewBounds();
             }
         });
     });
@@ -184,6 +181,14 @@ function checkConnection() {
 // Top bar close button handling
 ipcMain.handle(channels.CLOSE, () => {
     mainWindow.close();
+    mainWindow = null;
+
+    // Quit when all windows are closed, except on macOS. There, it's common
+    // for applications and their menu bar to stay active until the user quits
+    // explicitly with Cmd + Q.
+    if (process.platform !== "darwin") {
+        app.quit();
+    }
 });
 
 // Top bar minimize button handling
@@ -209,5 +214,4 @@ module.exports = {
     checkConnection,
     getMainWindow,
     getAppBrowserView,
-    BROWSER_VIEW_INIT,
 };

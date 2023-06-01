@@ -3,14 +3,17 @@ const {
     getMainWindow,
     getAppBrowserView,
     setViewBounds,
-    BROWSER_VIEW_INIT,
 } = require("./appStart");
-const { channels, appStates } = require("../../src/shared/constants");
+const {
+    channels,
+    appStates,
+    BROWSER_VIEW_INIT,
+} = require("../../src/shared/constants");
 const {
     getWindowSavedBounds,
     getWasMaximized,
     saveLastIP,
-} = require("./settings");
+} = require("./storage");
 
 appIsConnected = false;
 
@@ -31,7 +34,7 @@ function onSuccess(SUCCESS) {
     } else return false;
 }
 
-function loadSentry(ipaddress, cameFromAutoConnect) {
+async function loadSentry(ipaddress, cameFromAutoConnect) {
     // The SUCCESS variable is needed because even when the app fails to load,
     // the "did-finish-load" event is emmited eventually
     let loadedSentry = true;
@@ -60,7 +63,7 @@ function loadSentry(ipaddress, cameFromAutoConnect) {
     });
 
     const url = `http://${ipaddress}/?${Date.now()}`;
-    appBrowserView.webContents.loadURL(url);
+    await appBrowserView.webContents.loadURL(url);
     // mainWindow.webContents.loadURL(url); // appears to be usefull because it shows more info in the dev tools
 }
 

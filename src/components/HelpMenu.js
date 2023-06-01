@@ -2,6 +2,7 @@ import "../css/HelpMenu.css";
 import { useRef, useState, useEffect } from "react";
 import { ReactComponent as ChevronUp } from "../images/chevron-up.svg";
 import { ReactComponent as ChevronDown } from "../images/chevron-down.svg";
+import { HELP_EMAIL_URL } from "../shared/constants";
 
 function HelpMenu() {
     const [isOpen, setIsOpen] = useState(false);
@@ -65,11 +66,14 @@ function HelpMenu() {
                             <p>Email:</p>
                             <p
                                 className="helpMenu-content-service-contacts-item"
-                                onClick={() => {
-                                    navigator.clipboard.writeText(
-                                        "service@sea.ai"
-                                    );
-                                }}
+                                // onClick={() => {
+                                //     navigator.clipboard.writeText(
+                                //         "service@sea.ai"
+                                //     );
+                                // }}
+                                onClick={() =>
+                                    (window.location.href = HELP_EMAIL_URL)
+                                }
                             >
                                 service@sea.ai
                             </p>

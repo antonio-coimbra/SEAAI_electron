@@ -1,7 +1,7 @@
 const { channels } = require("../src/shared/constants");
 const { contextBridge, ipcRenderer } = require("electron");
 const { isMac } = require("./helpers/detectPlatform");
-const { lastIP } = require("./helpers/settings");
+const { lastIP } = require("./helpers/storage");
 
 const API = {
     sendIP: (input) => ipcRenderer.invoke(channels.SEND_IP, input),
