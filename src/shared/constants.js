@@ -34,4 +34,5 @@ module.exports = {
     TITLE_BAR_HEIGHT: 32,
     MAC_TITLE_BAR_HEIGHT: 32,
     SENTRY_RESPONSE: "HELLO",
+    HELP_EMAIL_URL: "mailto:service@sea.ai",
 };
