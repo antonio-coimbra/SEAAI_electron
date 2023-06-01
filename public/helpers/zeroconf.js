@@ -8,16 +8,19 @@ const { isAlive } = require("./isAlive");
 let appIsConnected = false;
 let gotResponse = false;
 let sentryIsConnected = false;
+let ipIsAlive;
 const possibleIPs = [];
 const aliveIPs = [];
 
 function onError() {
     // go to error page and manual ip insertion
-    mdns.destroy();
-    getMainWindow().webContents.send(
-        channels.APP_STATE,
-        appStates.ERROR_AUTO_CONNECTION_STATE
-    );
+    if (mdns) mdns.destroy();
+    mainWindow = getMainWindow();
+    if (mainWindow)
+        mainWindow.webContents.send(
+            channels.APP_STATE,
+            appStates.ERROR_AUTO_CONNECTION_STATE
+        );
 }
 
 function zeroconf() {
@@ -31,7 +34,6 @@ function zeroconf() {
                 possibleIPs.push(response.answers[i].data);
             }
 
-            let ipIsAlive;
             for (let i = 0; i < possibleIPs.length; i++) {
                 isAlive(possibleIPs[i])
                     .then((isAlive) => {
@@ -47,8 +49,9 @@ function zeroconf() {
                         }
                     })
                     .catch((err) => {
+                        // console.log(err);
                         console.log(`ip ${possibleIPs[i]} is not alive`);
-                        ipIsAlive = true;
+                        ipIsAlive = false;
                     })
                     .finally(() => {
                         if (
@@ -90,7 +93,7 @@ ipcMain.handle(channels.CANCEL_AUTO_CONNECT, () => {
 
 ipcMain.on(channels.ELECTRON_APP_STATE, (event, currentState) => {
     appIsConnected = currentState === appStates.CONNECTED ? true : false;
-    if (appIsConnected) mdns.destroy();
+    if (appIsConnected && mdns) mdns.destroy();
 });
 
 module.exports = { zeroconf };

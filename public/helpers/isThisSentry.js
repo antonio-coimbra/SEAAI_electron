@@ -11,17 +11,21 @@ const {
 
 function onErrorUserInput(socket) {
     const mainWindow = getMainWindow();
-    mainWindow.webContents.send(channels.APP_STATE, appStates.ERROR_STATE);
+    if (mainWindow) {
+        mainWindow.webContents.send(channels.APP_STATE, appStates.ERROR_STATE);
+    }
     socket.close();
     return null;
 }
 
 function onErrorAuto() {
     const mainWindow = getMainWindow();
-    mainWindow.webContents.send(
-        channels.APP_STATE,
-        appStates.RETRY_AUTO_CONNECTION_STATE
-    );
+    if (mainWindow) {
+        mainWindow.webContents.send(
+            channels.APP_STATE,
+            appStates.RETRY_AUTO_CONNECTION_STATE
+        );
+    }
     return null;
 }
 
@@ -112,4 +116,8 @@ function recursiveIPValidator(IPs, i) {
     });
 }
 
-module.exports = { isThisSentryUserInput, isThisSentryAuto };
+async function asyncIsThisSentry(lastIP) {
+    let response = await loadSentry(lastIP);
+}
+
+module.exports = { isThisSentryUserInput, isThisSentryAuto, asyncIsThisSentry };
