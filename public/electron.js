@@ -1,25 +1,16 @@
 const { app, ipcMain, BrowserWindow, net, protocol } = require("electron");
 const { startAplication, getMainWindow } = require("./helpers/appStart");
 const { zeroconf } = require("./helpers/zeroconf");
-const { channels, appStates } = require("../src/shared/constants");
+const {
+    channels,
+    appStates,
+    HELP_EMAIL_URL,
+} = require("../src/shared/constants");
 const { isThisSentryUserInput } = require("./helpers/isThisSentry");
 const { loadSentry } = require("./helpers/loadSentry");
+const { lastIP } = require("./helpers/storage");
+const { isAlive } = require("./helpers/isAlive");
 const path = require("path");
-
-// Setup a local proxy to adjust the paths of requested files when loading
-// them from the local production bundle (e.g.: local fonts, etc...).
-function setupLocalFilesNormalizerProxy() {
-    protocol.registerHttpProtocol(
-        "file",
-        (request, callback) => {
-            const url = request.url.substr(8);
-            callback({ path: path.normalize(`${__dirname}/${url}`) });
-        },
-        (error) => {
-            if (error) console.error("Failed to register protocol");
-        }
-    );
-}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -27,19 +18,12 @@ function setupLocalFilesNormalizerProxy() {
 app.whenReady().then(() => {
     // Create the browser window and initialize the appBrowserView
     startAplication();
-    setupLocalFilesNormalizerProxy();
-});
-
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on("window-all-closed", () => {
-    if (process.platform !== "darwin") app.quit();
 });
 
 // On macOS it's common to re-create a window in the app when the
 // dock icon is clicked and there are no other windows open.
 app.on("activate", () => {
+    console.log("Activating app on macOS");
     if (BrowserWindow.getAllWindows().length === 0) startAplication();
 });
 
@@ -68,20 +52,30 @@ ipcMain.handle(channels.AUTO_CONNECT, () => {
             appStates.NO_CONNECTION_ERROR_STATE
         );
     } else {
-        // TRY LAST CONNECTED IP HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-        zeroconf(getMainWindow());
+        isAlive(lastIP)
+            .then((isAlive) => {
+                console.log(`lastIP ${lastIP} is alive = ${isAlive}`);
+                isAlive ? zeroconf(lastIP) : zeroconf(null);
+            })
+            .catch((err) => {
+                console.log(`lastIP ${lastIP} is not alive`);
+                lastIPIsAlive = false;
+                zeroconf(null);
+            });
     }
 });
 
 // If your app has no need to navigate or only needs to navigate to known pages,
 // it is a good idea to limit navigation outright to that known scope,
 // disallowing any other kinds of navigation.
-const allowedNavigationDestinations = "https://sentry-electron-app.com";
+const allowedNavigationDestinations = "https://sentry-desktop-app.com";
 app.on("web-contents-created", (event, contents) => {
     contents.on("will-navigate", (event, navigationUrl) => {
         const parsedUrl = new URL(navigationUrl);
-
-        if (!allowedNavigationDestinations.includes(parsedUrl.origin)) {
+        if (
+            !allowedNavigationDestinations.includes(parsedUrl.origin) &&
+            navigationUrl !== HELP_EMAIL_URL
+        ) {
             event.preventDefault();
         }
     });
