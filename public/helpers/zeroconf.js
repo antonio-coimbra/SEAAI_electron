@@ -24,6 +24,7 @@ function onError() {
 }
 
 function zeroconf() {
+    console.log("zeroconf query started");
     mdns.on("response", function (response) {
         if (response.answers[0].name.includes("oscar")) {
             gotResponse = true; //Got a response form oscar.local

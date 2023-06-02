@@ -116,8 +116,38 @@ function recursiveIPValidator(IPs, i) {
     });
 }
 
-async function asyncIsThisSentry(lastIP) {
-    let response = await loadSentry(lastIP);
+async function asyncIsThisSentry(lastIP, zeroconf) {
+    console.log("attempting to connect to lastIP:" + lastIP);
+    const ipaddress = lastIP;
+    const socket = new WebSocket(
+        "ws://" + ipaddress + ":" + SIGNAL_SERVER_PORT + SIGNAL_SERVER_URL
+    );
+
+    socket.on("error", (event) => {
+        console.log("WebSocket error on LastIP");
+        message = event.message;
+        console.log(message);
+        socket.close();
+        zeroconf();
+        return false;
+    });
+
+    socket.on("close", (event) => {
+        // console.log(ipaddress + " webSocket closed: " + event);
+    });
+
+    socket.on("message", async (data) => {
+        const message = data ? JSON.parse(data).topic : null;
+        if (message === SENTRY_RESPONSE) {
+            socket.close();
+            console.log("will load LastIP");
+            return await loadSentry(ipaddress);
+        } else {
+            console.log(`lastIP didn't work`);
+            zeroconf();
+            return false;
+        }
+    });
 }
 
 module.exports = { isThisSentryUserInput, isThisSentryAuto, asyncIsThisSentry };

@@ -4,14 +4,15 @@ import Title from "./Title";
 import StandardButton from "./StandardButton";
 import { ReactComponent as Logo } from "../images/sea-ai-logo.svg";
 import { appStates } from "../shared/constants";
+import { useState, useEffect } from "react";
 
-function SetConnection({
-    setAppState,
-    appState,
-    setTriedAutoConnect,
-    startInput,
-    setStartInput
-}) {
+function SetConnection({ setAppState, appState, setTriedAutoConnect }) {
+    const [startInput, setStartInput] = useState(null);
+
+    useEffect(() => {
+        window.api.getLastIP(setStartInput);
+    }, []);
+
     function autoConnect() {
         setTriedAutoConnect(true);
         setAppState(appStates.AUTO_CONNECTION_STATE);
@@ -33,15 +34,15 @@ function SetConnection({
                     }
                 />
             </div>
-            {appState !== appStates.RETRY_AUTO_CONNECTION_STATE && (
-                <IpInput
-                    appState={appState}
-                    setAppState={setAppState}
-                    setTriedAutoConnect={setTriedAutoConnect}
-                    startInput={startInput}
-                    setStartInput={setStartInput}
-                />
-            )}
+            {appState !== appStates.RETRY_AUTO_CONNECTION_STATE &&
+                startInput !== null && (
+                    <IpInput
+                        appState={appState}
+                        setAppState={setAppState}
+                        setTriedAutoConnect={setTriedAutoConnect}
+                        startInput={startInput}
+                    />
+                )}
             {appState === appStates.RETRY_AUTO_CONNECTION_STATE && (
                 <div className="setConnection-tryAutoConnection">
                     <StandardButton onClick={autoConnect}>

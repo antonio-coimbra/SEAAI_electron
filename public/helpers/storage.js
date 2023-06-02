@@ -29,6 +29,7 @@ function getWasMaximized() {
 
 function getLastIP() {
     const lastIP = storage.get(LAST_IP);
+    console.log("This was called. Will return " + lastIP);
     if (lastIP) return lastIP;
     else {
         return "";
@@ -48,13 +49,11 @@ function setWasMaximized(wasMaximized) {
     storage.set(WAS_MAXIMIZED, wasMaximized);
 }
 
-const lastIP = getLastIP();
-
 module.exports = {
     getWindowSavedBounds,
     saveWindowBounds,
     getWasMaximized,
     setWasMaximized,
-    lastIP,
+    getLastIP,
     saveLastIP,
 };

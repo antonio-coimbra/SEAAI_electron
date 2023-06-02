@@ -6,9 +6,12 @@ const {
     appStates,
     HELP_EMAIL_URL,
 } = require("../src/shared/constants");
-const { isThisSentryUserInput } = require("./helpers/isThisSentry");
+const {
+    isThisSentryUserInput,
+    asyncIsThisSentry,
+} = require("./helpers/isThisSentry");
 const { loadSentry } = require("./helpers/loadSentry");
-const { lastIP } = require("./helpers/storage");
+const { getLastIP } = require("./helpers/storage");
 const { isAlive } = require("./helpers/isAlive");
 const path = require("path");
 
@@ -52,15 +55,26 @@ ipcMain.handle(channels.AUTO_CONNECT, () => {
             appStates.NO_CONNECTION_ERROR_STATE
         );
     } else {
+        const lastIP = getLastIP();
+        console.log(`lastIP: ${lastIP}`);
         isAlive(lastIP)
             .then((isAlive) => {
-                console.log(`lastIP ${lastIP} is alive = ${isAlive}`);
-                isAlive ? zeroconf(lastIP) : zeroconf(null);
+                console.log(`lastIP ${lastIP} is available = ${isAlive}`);
+                if (isAlive) {
+                    asyncIsThisSentry(lastIP, zeroconf).catch((err) => {
+                        console.log(
+                            `lastIP ${lastIP} isThisSentry error = ${err}`
+                        );
+                        zeroconf();
+                    });
+                } else {
+                    console.log(`lastIP ${lastIP} is not available 1`);
+                    zeroconf();
+                }
             })
             .catch((err) => {
-                console.log(`lastIP ${lastIP} is not alive`);
-                lastIPIsAlive = false;
-                zeroconf(null);
+                console.log(`lastIP ${lastIP} is not available 2`);
+                zeroconf();
             });
     }
 });
