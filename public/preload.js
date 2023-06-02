@@ -36,7 +36,6 @@ const API = {
     },
 
     getLastIP: (setLastIP) => {
-        console.log(`last IP: ${getLastIP()}`);
         setLastIP(getLastIP());
     },
 };

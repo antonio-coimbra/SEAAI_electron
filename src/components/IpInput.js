@@ -7,13 +7,9 @@ const { regEx, appStates } = require("../shared/constants");
 let error = null;
 
 function IpInput({ appState, setAppState, setTriedAutoConnect, startInput }) {
-    console.log(startInput);
     const [subFailed, setSubFailed] = useState(false);
-
     const [input, setInput] = useState(startInput); // 172.17.86.153 only for testing
-    console.log(input);
     const [valid, setValid] = useState(regEx.test(startInput)); // true only for testing
-    console.log(valid);
 
     switch (appState) {
         default: {
@@ -53,7 +49,7 @@ function IpInput({ appState, setAppState, setTriedAutoConnect, startInput }) {
         if (valid) {
             setSubFailed(false);
             console.log(`Submited IP: ${input}`);
-            setStartInput(input);
+            // setStartInput(input);
             window.api.sendIP(input);
         }
     }

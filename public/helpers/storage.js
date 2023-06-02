@@ -29,7 +29,7 @@ function getWasMaximized() {
 
 function getLastIP() {
     const lastIP = storage.get(LAST_IP);
-    console.log("This was called. Will return " + lastIP);
+    console.log("Saved IP: " + lastIP);
     if (lastIP) return lastIP;
     else {
         return "";

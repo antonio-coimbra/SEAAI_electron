@@ -29,12 +29,17 @@ function onSuccess(SUCCESS) {
         mainWindow.focus();
         setViewBounds(BROWSER_VIEW_INIT);
 
-        if (getWasMaximized) mainWindow.maximize();
+        if (getWasMaximized()) mainWindow.maximize();
         return SUCCESS;
     } else return false;
 }
 
-async function loadSentry(ipaddress, cameFromAutoConnect) {
+function onError(option, zeroconf) {
+    if (option === "last-ip") zeroconf();
+    return null;
+}
+
+async function loadSentry(ipaddress, zeroconf, option) {
     // The SUCCESS variable is needed because even when the app fails to load,
     // the "did-finish-load" event is emmited eventually
     let loadedSentry = true;
@@ -52,19 +57,19 @@ async function loadSentry(ipaddress, cameFromAutoConnect) {
         loadedSentry = false;
         console.log("BrowserView: did-fail-load");
         mainWindow.webContents.send(channels.APP_STATE, "error");
-        return loadedSentry;
+        return onError(option, zeroconf);
     });
 
     appBrowserView.webContents.on("unresponsive", () => {
         loadedSentry = false;
         console.log("BrowserView: unresponsive");
         mainWindow.webContents.send(channels.APP_STATE, "error");
-        return loadedSentry;
+        return onError(option, zeroconf);
     });
 
     const url = `http://${ipaddress}/?${Date.now()}`;
     await appBrowserView.webContents.loadURL(url);
-    // mainWindow.webContents.loadURL(url); // appears to be usefull because it shows more info in the dev tools
+    // await mainWindow.webContents.loadURL(url); // appears to be usefull because it shows more info in the dev tools
 }
 
 ipcMain.on(channels.ELECTRON_APP_STATE, (event, currentState) => {
