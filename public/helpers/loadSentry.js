@@ -34,13 +34,15 @@ function onSuccess(SUCCESS) {
     } else return false;
 }
 
-function onError(option, zeroconf) {
+function onError(zeroconf, option) {
     if (option === "last-ip") zeroconf();
     return null;
 }
 
 async function loadSentry(ipaddress, zeroconf, option) {
-    // The SUCCESS variable is needed because even when the app fails to load,
+    console.log("LOADING SENTRY: " + ipaddress + " -> option: " + option);
+
+    // The loadedSentry variable is needed because even when the app fails to load,
     // the "did-finish-load" event is emmited eventually
     let loadedSentry = true;
 
@@ -57,14 +59,14 @@ async function loadSentry(ipaddress, zeroconf, option) {
         loadedSentry = false;
         console.log("BrowserView: did-fail-load");
         mainWindow.webContents.send(channels.APP_STATE, "error");
-        return onError(option, zeroconf);
+        return onError(zeroconf, option);
     });
 
     appBrowserView.webContents.on("unresponsive", () => {
         loadedSentry = false;
         console.log("BrowserView: unresponsive");
         mainWindow.webContents.send(channels.APP_STATE, "error");
-        return onError(option, zeroconf);
+        return onError(zeroconf, option);
     });
 
     const url = `http://${ipaddress}/?${Date.now()}`;

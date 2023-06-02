@@ -10,6 +10,7 @@ const {
 } = require("../../src/shared/constants");
 
 function onErrorUserInput(socket) {
+    console.log("user input error");
     const mainWindow = getMainWindow();
     if (mainWindow) {
         mainWindow.webContents.send(channels.APP_STATE, appStates.ERROR_STATE);
@@ -31,19 +32,25 @@ function onErrorAuto() {
 
 function onSuccess(socket, ipaddress, zeroconf, option) {
     socket.close();
-    return loadSentry(ipaddress, zeroconf);
+    return loadSentry(ipaddress, zeroconf, option);
 }
 
 function isThisSentryUserInput(ipaddress) {
+    let failed = false;
+    let loadedSentry = false;
+    console.log("isThisSentryUserInput: " + ipaddress);
     const socket = new WebSocket(
         "ws://" + ipaddress + ":" + SIGNAL_SERVER_PORT + SIGNAL_SERVER_URL
     );
 
     socket.on("error", (event) => {
-        console.log("WebSocket error");
-        message = event.message;
-        console.log(message);
-        onErrorUserInput(socket);
+        if (!failed && !loadedSentry) {
+            failed = true;
+            console.log("WebSocket error on user input");
+            message = event.message;
+            console.log(message);
+            return onErrorUserInput(socket);
+        }
     });
 
     socket.on("close", (event) => {
@@ -53,15 +60,30 @@ function isThisSentryUserInput(ipaddress) {
     socket.on("message", (data) => {
         const message = data ? JSON.parse(data).topic : null;
         if (message === SENTRY_RESPONSE) {
+            loadedSentry = true;
             onSuccess(socket, ipaddress);
         } else {
-            console.log(`${ipaddress} didn't work`);
-            return onErrorUserInput(socket);
+            if (!failed && !loadedSentry) {
+                failed = true;
+                console.log(`${ipaddress} is not a sentry`);
+                return onErrorUserInput(socket);
+            }
         }
     });
+
+    setTimeout(() => {
+        console.log("falhou: " + failed);
+        console.log("loadedSentry: " + loadedSentry);
+        if (!failed && !loadedSentry) {
+            console.log(`${ipaddress} auto connect timeout`);
+            failed = true;
+            return onErrorUserInput(socket);
+        }
+    }, 10000);
 }
 
 function isThisSentryAuto(IPs) {
+    console.log("isThisSentryAuto: " + IPs[0]);
     return recursiveIPValidator(IPs, 0);
 }
 
@@ -74,6 +96,7 @@ function recursiveIPValidator(IPs, i) {
     console.log("attempting to connect to " + IPs[i]);
 
     let wentNextIP = false;
+    let appIsConnected = false;
     const ipaddress = IPs[i];
     const socket = new WebSocket(
         "ws://" + ipaddress + ":" + SIGNAL_SERVER_PORT + SIGNAL_SERVER_URL
@@ -97,6 +120,7 @@ function recursiveIPValidator(IPs, i) {
     socket.on("message", (data) => {
         const message = data ? JSON.parse(data).topic : null;
         if (message === SENTRY_RESPONSE) {
+            appIsConnected = true;
             return onSuccess(socket, ipaddress);
         } else {
             console.log(`${ipaddress} didn't work`);
@@ -108,9 +132,8 @@ function recursiveIPValidator(IPs, i) {
         }
     });
 
-    setTimeout((wentNextIP) => {
-        console.log("foi next: " + wentNextIP);
-        if (!wentNextIP) {
+    setTimeout(() => {
+        if (!wentNextIP && !appIsConnected) {
             console.log(`${ipaddress} auto connect timeout`);
             wentNextIP = true;
             return recursiveIPValidator(IPs, i + 1);
@@ -118,8 +141,8 @@ function recursiveIPValidator(IPs, i) {
     }, 10000);
 }
 
-async function asyncIsThisSentry(lastIP, zeroconf) {
-    console.log("attempting to connect to lastIP: " + lastIP);
+async function lastIPIsThisSentry(lastIP, zeroconf) {
+    console.log("LastIP isThisSentry: " + lastIP);
     const ipaddress = lastIP;
     let failed = false;
     let appIsConnected = false;
@@ -168,4 +191,8 @@ async function asyncIsThisSentry(lastIP, zeroconf) {
     }, 10000);
 }
 
-module.exports = { isThisSentryUserInput, isThisSentryAuto, asyncIsThisSentry };
+module.exports = {
+    isThisSentryUserInput,
+    isThisSentryAuto,
+    lastIPIsThisSentry,
+};

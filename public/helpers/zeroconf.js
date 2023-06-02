@@ -8,7 +8,7 @@ const { isAlive } = require("./isAlive");
 let appIsConnected = false;
 let gotResponse = false;
 let sentryIsConnected = false;
-let ipIsAlive;
+let ipIsAlive = false;
 const possibleIPs = [];
 const aliveIPs = [];
 
@@ -19,7 +19,7 @@ function onError() {
     if (mainWindow)
         mainWindow.webContents.send(
             channels.APP_STATE,
-            appStates.ERROR_AUTO_CONNECTION_STATE
+            appStates.RETRY_AUTO_CONNECTION_STATE
         );
 }
 
@@ -80,7 +80,7 @@ function zeroconf() {
     // close the connection after 15 seconds
     // Send app to insert ip state
     setTimeout(() => {
-        if (!appIsConnected && !gotResponse) {
+        if (!appIsConnected && (!gotResponse || aliveIPs.length === 0)) {
             console.log("auto connect timeout");
             onError();
         }

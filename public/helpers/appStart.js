@@ -32,7 +32,7 @@ function startAplication() {
         titleBarStyle: "hidden",
         show: false,
         backgroundColor: "#191A1A",
-        icon: path.join(__dirname, "../icon.ico"),
+        // icon: path.join(__dirname, "../"),
         webPreferences: {
             contextIsolation: true,
             nodeIntegration: true,
@@ -188,7 +188,7 @@ ipcMain.handle(channels.CLOSE, () => {
     // explicitly with Cmd + Q.
     if (process.platform !== "darwin") {
         app.quit();
-    }
+    } else app.quit();
 });
 
 // Top bar minimize button handling

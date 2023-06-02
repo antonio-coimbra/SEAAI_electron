@@ -8,7 +8,7 @@ const {
 } = require("../src/shared/constants");
 const {
     isThisSentryUserInput,
-    asyncIsThisSentry,
+    lastIPIsThisSentry,
 } = require("./helpers/isThisSentry");
 const { loadSentry } = require("./helpers/loadSentry");
 const { getLastIP } = require("./helpers/storage");
@@ -61,7 +61,7 @@ ipcMain.handle(channels.AUTO_CONNECT, () => {
             .then((isAlive) => {
                 console.log(`lastIP ${lastIP} is available = ${isAlive}`);
                 if (isAlive) {
-                    asyncIsThisSentry(lastIP, zeroconf).catch((err) => {
+                    lastIPIsThisSentry(lastIP, zeroconf).catch((err) => {
                         console.log(
                             `lastIP ${lastIP} isThisSentry error = ${err}`
                         );
@@ -87,9 +87,12 @@ const allowedNavigationDestinations = "https://sentry-desktop-app.com";
 app.on("web-contents-created", (event, contents) => {
     contents.on("will-navigate", (event, navigationUrl) => {
         const parsedUrl = new URL(navigationUrl);
+        // console.log(navigationUrl);
         if (
             !allowedNavigationDestinations.includes(parsedUrl.origin) &&
-            navigationUrl !== HELP_EMAIL_URL
+            navigationUrl !== HELP_EMAIL_URL &&
+            !navigationUrl.includes("https://wa.me/message") &&
+            !navigationUrl.includes("whatsapp")
         ) {
             event.preventDefault();
         }
