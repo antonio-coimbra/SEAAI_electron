@@ -57,26 +57,26 @@ ipcMain.handle(channels.AUTO_CONNECT, () => {
     } else {
         const lastIP = getLastIP();
         console.log(`lastIP: ${lastIP}`);
-        // isAlive(lastIP)
-        //     .then((isAlive) => {
-        //         console.log(`lastIP ${lastIP} is available = ${isAlive}`);
-        //         if (isAlive) {
-        //             asyncIsThisSentry(lastIP, zeroconf).catch((err) => {
-        //                 console.log(
-        //                     `lastIP ${lastIP} isThisSentry error = ${err}`
-        //                 );
-        //                 zeroconf();
-        //             });
-        //         } else {
-        //             console.log(`lastIP ${lastIP} is not available 1`);
-        //             zeroconf();
-        //         }
-        //     })
-        //     .catch((err) => {
-        //         console.log(`lastIP ${lastIP} is not available 2`);
-        //         zeroconf();
-        //     });
-        zeroconf();
+        isAlive(lastIP)
+            .then((isAlive) => {
+                console.log(`lastIP ${lastIP} is available = ${isAlive}`);
+                if (isAlive) {
+                    asyncIsThisSentry(lastIP, zeroconf).catch((err) => {
+                        console.log(
+                            `lastIP ${lastIP} isThisSentry error = ${err}`
+                        );
+                        zeroconf();
+                    });
+                } else {
+                    console.log(`lastIP ${lastIP} is not available 1`);
+                    zeroconf();
+                }
+            })
+            .catch((err) => {
+                console.log(`lastIP ${lastIP} is not available 2`);
+                zeroconf();
+            });
+        // zeroconf();
     }
 });
 
