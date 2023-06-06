@@ -22,7 +22,13 @@ function onError(mdns) {
         );
 }
 
-const name = ["oscar.local", "oscar-2.local", "oscar-3.local", "oscar-4.local"];
+const name = [
+    "oscar.local",
+    "oscar-2.local",
+    "oscar-3.local",
+    "oscar-4.local",
+    "oscar-5.local",
+];
 
 function zeroconf(i) {
     const mdns = require("multicast-dns")();
