@@ -27,7 +27,7 @@ app.whenReady().then(() => {
 // dock icon is clicked and there are no other windows open.
 app.on("activate", () => {
     console.log("Activating app on macOS");
-    if (BrowserWindow.getAllWindows().length !== 0) startAplication();
+    if (BrowserWindow.getAllWindows().length === 0) startAplication();
 });
 
 // User entered the IP address
