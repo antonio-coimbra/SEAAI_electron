@@ -23,23 +23,6 @@ let mainWindow;
 let appBrowserView;
 
 function startAplication() {
-    // Create the browser window.
-    mainWindow = new BrowserWindow({
-        width: 970,
-        height: 750,
-        minWidth: 520,
-        minHeight: 720,
-        titleBarStyle: "hidden",
-        show: false,
-        backgroundColor: "#191A1A",
-        // icon: path.join(__dirname, "../"),
-        webPreferences: {
-            contextIsolation: true,
-            nodeIntegration: true,
-            preload: path.join(__dirname, "../preload.js"),
-            // devTools: false, // UNCOMMENT ON RELEASE
-        },
-    });
     app.whenReady().then(() => {
         // Create the browser window.
         mainWindow = new BrowserWindow({
@@ -188,7 +171,14 @@ ipcMain.handle(channels.CLOSE, () => {
     // explicitly with Cmd + Q.
     if (process.platform !== "darwin") {
         app.quit();
-    } else app.quit();
+    } else {
+        console.log("Quitting");
+        app.quit();
+    }
+});
+
+app.on("window-all-closed", () => {
+    app.quit();
 });
 
 // Top bar minimize button handling

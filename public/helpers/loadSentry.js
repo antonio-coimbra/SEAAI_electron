@@ -35,7 +35,7 @@ function onSuccess(SUCCESS) {
 }
 
 function onError(zeroconf, option) {
-    if (option === "last-ip") zeroconf();
+    if (option === "last-ip") zeroconf(0);
     return null;
 }
 

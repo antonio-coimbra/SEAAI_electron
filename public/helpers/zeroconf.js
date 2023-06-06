@@ -2,7 +2,6 @@ const { isThisSentryAuto } = require("./isThisSentry");
 const { getMainWindow } = require("./appStart");
 const { ipcMain } = require("electron");
 const { channels, appStates } = require("../../src/shared/constants");
-const mdns = require("multicast-dns")();
 const { isAlive } = require("./isAlive");
 
 let appIsConnected = false;
@@ -12,7 +11,7 @@ let ipIsAlive = false;
 const possibleIPs = [];
 const aliveIPs = [];
 
-function onError() {
+function onError(mdns) {
     // go to error page and manual ip insertion
     if (mdns) mdns.destroy();
     mainWindow = getMainWindow();
@@ -23,8 +22,11 @@ function onError() {
         );
 }
 
-function zeroconf() {
-    console.log("zeroconf query started");
+const name = ["oscar.local", "oscar-2.local", "oscar-3.local", "oscar-4.local"];
+
+function zeroconf(i) {
+    const mdns = require("multicast-dns")();
+    console.log("zeroconf query started --> " + name[i]);
     mdns.on("response", function (response) {
         if (response.answers[0].name.includes("oscar")) {
             gotResponse = true; //Got a response form oscar.local
@@ -71,7 +73,7 @@ function zeroconf() {
     mdns.query({
         questions: [
             {
-                name: "oscar.local",
+                name: name[i],
                 type: "*",
             },
         ],
@@ -81,10 +83,12 @@ function zeroconf() {
     // Send app to insert ip state
     setTimeout(() => {
         if (!appIsConnected && (!gotResponse || aliveIPs.length === 0)) {
-            console.log("auto connect timeout");
-            onError();
+            console.log(name[i] + " auto connect timeout");
+            if (i + 2 > name.length) {
+                onError(mdns);
+            } else zeroconf(i + 1);
         }
-    }, 20000);
+    }, 5000);
 }
 
 ipcMain.handle(channels.CANCEL_AUTO_CONNECT, () => {
@@ -94,7 +98,6 @@ ipcMain.handle(channels.CANCEL_AUTO_CONNECT, () => {
 
 ipcMain.on(channels.ELECTRON_APP_STATE, (event, currentState) => {
     appIsConnected = currentState === appStates.CONNECTED ? true : false;
-    if (appIsConnected && mdns) mdns.destroy();
 });
 
 module.exports = { zeroconf };

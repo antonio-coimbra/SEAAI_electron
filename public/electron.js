@@ -27,7 +27,7 @@ app.whenReady().then(() => {
 // dock icon is clicked and there are no other windows open.
 app.on("activate", () => {
     console.log("Activating app on macOS");
-    if (BrowserWindow.getAllWindows().length === 0) startAplication();
+    if (BrowserWindow.getAllWindows().length !== 0) startAplication();
 });
 
 // User entered the IP address
@@ -65,18 +65,18 @@ ipcMain.handle(channels.AUTO_CONNECT, () => {
                         console.log(
                             `lastIP ${lastIP} isThisSentry error = ${err}`
                         );
-                        zeroconf();
+                        zeroconf(0);
                     });
                 } else {
                     console.log(`lastIP ${lastIP} is not available 1`);
-                    zeroconf();
+                    zeroconf(0);
                 }
             })
             .catch((err) => {
                 console.log(`lastIP ${lastIP} is not available 2`);
-                zeroconf();
+                zeroconf(0);
             });
-        // zeroconf();
+        // zeroconf(0);
     }
 });
 

@@ -157,7 +157,7 @@ async function lastIPIsThisSentry(lastIP, zeroconf) {
             console.log(message);
             failed = true;
             socket.close();
-            zeroconf();
+            zeroconf(0);
             return null;
         }
     });
@@ -175,7 +175,7 @@ async function lastIPIsThisSentry(lastIP, zeroconf) {
             return await loadSentry(ipaddress, zeroconf, "last-ip");
         } else {
             console.log(`lastIP didn't work`);
-            zeroconf();
+            zeroconf(0);
             return false;
         }
     });
@@ -185,7 +185,7 @@ async function lastIPIsThisSentry(lastIP, zeroconf) {
             console.log(`${ipaddress} lastIP auto connect timeout`);
             failed = true;
             socket.close();
-            zeroconf();
+            zeroconf(0);
             return null;
         }
     }, 10000);
