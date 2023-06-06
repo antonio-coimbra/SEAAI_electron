@@ -31,6 +31,7 @@ function startAplication() {
             minWidth: 520,
             minHeight: 750,
             titleBarStyle: "hidden",
+            frame: false,
             show: false,
             backgroundColor: "#191A1A",
             icon: path.join(__dirname, "../icon.ico"),
@@ -85,6 +86,7 @@ function startAplication() {
                 appBrowserView.getBounds().width !== 0 ||
                 appBrowserView.getBounds().height !== 0;
             if (browserViewActive) setWasMaximized(false);
+            // appBrowserView.setBounds(appBrowserView.getBounds());
         });
         mainWindow.on("maximize", () => {
             mainWindow.webContents.send(channels.MAXRES, true);
@@ -92,6 +94,7 @@ function startAplication() {
                 appBrowserView.getBounds().width !== 0 ||
                 appBrowserView.getBounds().height !== 0;
             if (browserViewActive) setWasMaximized(true);
+            // appBrowserView.setBounds(appBrowserView.getBounds());
         });
 
         mainWindow.on("resized", () => {
