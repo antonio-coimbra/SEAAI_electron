@@ -172,12 +172,12 @@ ipcMain.handle(channels.CLOSE, () => {
     if (process.platform !== "darwin") {
         app.quit();
     } else {
-        console.log("Quitting");
         app.quit();
     }
 });
 
 app.on("window-all-closed", () => {
+    mainWindow = null;
     app.quit();
 });
 
