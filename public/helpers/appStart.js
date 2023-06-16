@@ -122,7 +122,7 @@ function startAplication() {
 }
 
 function setViewBounds(option) {
-    titleBarHeight = isMac ? MAC_TITLE_BAR_HEIGHT : TITLE_BAR_HEIGHT;
+    const titleBarHeight = isMac ? MAC_TITLE_BAR_HEIGHT : TITLE_BAR_HEIGHT;
     const bounds = mainWindow.getBounds();
     const browserViewActive = appBrowserView.getBounds().width !== 0;
     switch (option) {
@@ -154,13 +154,6 @@ function setViewBounds(option) {
             });
 
             break;
-    }
-}
-
-function checkConnection() {
-    if (!net.isOnline) {
-        console.log("No internet connection");
-        mainWindow.webContents.send(channels.APP_STATE, appStates.ERROR_STATE);
     }
 }
 
@@ -204,7 +197,6 @@ function getAppBrowserView() {
 module.exports = {
     startAplication,
     setViewBounds,
-    checkConnection,
     getMainWindow,
     getAppBrowserView,
 };

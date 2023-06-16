@@ -14,7 +14,7 @@ const aliveIPs = [];
 function onError(mdns) {
     // go to error page and manual ip insertion
     if (mdns) mdns.destroy();
-    mainWindow = getMainWindow();
+    const mainWindow = getMainWindow();
     if (mainWindow)
         mainWindow.webContents.send(
             channels.APP_STATE,
@@ -23,23 +23,27 @@ function onError(mdns) {
 }
 
 const name = [
+    "sentry.local",
+    "sentry-2.local",
+    "sentry-3.local",
     "oscar.local",
     "oscar-2.local",
     "oscar-3.local",
-    "oscar-4.local",
-    "oscar-5.local",
 ];
 
 function zeroconf(i) {
     const mdns = require("multicast-dns")();
     console.log("zeroconf query started --> " + name[i]);
     mdns.on("response", function (response) {
-        if (response.answers[0].name.includes("oscar")) {
+        if (
+            response.answers[0].name.includes("oscar") ||
+            response.answers[0].name.includes("sentry")
+        ) {
             gotResponse = true; //Got a response form oscar.local
             mdns.destroy(); // closes the socket
 
             for (let i = 0; i < response.answers.length; i++) {
-                console.log("oscar.local IP: " + response.answers[i].data);
+                console.log("Recieved IP: " + response.answers[i].data);
                 possibleIPs.push(response.answers[i].data);
             }
 
@@ -68,7 +72,10 @@ function zeroconf(i) {
                             aliveIPs.indexOf(possibleIPs[i]) === 0 &&
                             ipIsAlive
                         ) {
-                            sentryIsConnected = isThisSentryAuto(aliveIPs);
+                            sentryIsConnected = isThisSentryAuto(
+                                aliveIPs,
+                                zeroconf
+                            );
                         }
                     });
                 if (sentryIsConnected) break;
@@ -90,17 +97,12 @@ function zeroconf(i) {
     setTimeout(() => {
         if (!appIsConnected && (!gotResponse || aliveIPs.length === 0)) {
             console.log(name[i] + " auto connect timeout");
-            if (i + 2 > name.length) {
+            if (i + 1 > name.length) {
                 onError(mdns);
             } else zeroconf(i + 1);
         }
     }, 5000);
 }
-
-ipcMain.handle(channels.CANCEL_AUTO_CONNECT, () => {
-    console.log("canceled auto connect");
-    mdns.destroy();
-});
 
 ipcMain.on(channels.ELECTRON_APP_STATE, (event, currentState) => {
     appIsConnected = currentState === appStates.CONNECTED ? true : false;

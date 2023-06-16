@@ -76,18 +76,19 @@ ipcMain.handle(channels.AUTO_CONNECT, () => {
                 console.log(`lastIP ${lastIP} is not available 2`);
                 zeroconf(0);
             });
-        // zeroconf(0);
+        // zeroconf(0); // only for debugging
     }
 });
 
 // If your app has no need to navigate or only needs to navigate to known pages,
 // it is a good idea to limit navigation outright to that known scope,
 // disallowing any other kinds of navigation.
-const allowedNavigationDestinations = "https://sentry-desktop-app.com";
+const allowedNavigationDestinations = "http://" + getLastIP() + "/?";
 app.on("web-contents-created", (event, contents) => {
     contents.on("will-navigate", (event, navigationUrl) => {
         const parsedUrl = new URL(navigationUrl);
         // console.log(navigationUrl);
+        // console.log(event);
         if (
             !allowedNavigationDestinations.includes(parsedUrl.origin) &&
             navigationUrl !== HELP_EMAIL_URL &&
@@ -95,6 +96,6 @@ app.on("web-contents-created", (event, contents) => {
             !navigationUrl.includes("whatsapp")
         ) {
             event.preventDefault();
-        }
+        } else console.log("will navigate to " + navigationUrl);
     });
 });

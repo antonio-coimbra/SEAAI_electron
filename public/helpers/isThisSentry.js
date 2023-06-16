@@ -61,7 +61,7 @@ function isThisSentryUserInput(ipaddress) {
         const message = data ? JSON.parse(data).topic : null;
         if (message === SENTRY_RESPONSE) {
             loadedSentry = true;
-            onSuccess(socket, ipaddress);
+            onSuccess(socket, ipaddress, "user-input");
         } else {
             if (!failed && !loadedSentry) {
                 failed = true;
@@ -82,12 +82,12 @@ function isThisSentryUserInput(ipaddress) {
     }, 10000);
 }
 
-function isThisSentryAuto(IPs) {
+function isThisSentryAuto(IPs, zeroconf) {
     console.log("isThisSentryAuto: " + IPs[0]);
-    return recursiveIPValidator(IPs, 0);
+    return recursiveIPValidator(IPs, 0, zeroconf);
 }
 
-function recursiveIPValidator(IPs, i) {
+function recursiveIPValidator(IPs, i, zeroconf) {
     if (i >= IPs.length) {
         console.log("No more IPs to validate. Exiting auto connection");
         return onErrorAuto();
@@ -121,7 +121,7 @@ function recursiveIPValidator(IPs, i) {
         const message = data ? JSON.parse(data).topic : null;
         if (message === SENTRY_RESPONSE) {
             appIsConnected = true;
-            return onSuccess(socket, ipaddress);
+            return onSuccess(socket, ipaddress, zeroconf, "auto-connect", i);
         } else {
             console.log(`${ipaddress} didn't work`);
             socket.close();
@@ -169,10 +169,9 @@ async function lastIPIsThisSentry(lastIP, zeroconf) {
     socket.on("message", async (data) => {
         const message = data ? JSON.parse(data).topic : null;
         if (message === SENTRY_RESPONSE) {
-            socket.close();
             console.log("will load LastIP");
             appIsConnected = true;
-            return await loadSentry(ipaddress, zeroconf, "last-ip");
+            return onSuccess(socket, ipaddress, zeroconf, "last-ip");
         } else {
             console.log(`lastIP didn't work`);
             zeroconf(0);

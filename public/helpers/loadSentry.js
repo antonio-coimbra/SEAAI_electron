@@ -34,12 +34,13 @@ function onSuccess(SUCCESS) {
     } else return false;
 }
 
-function onError(zeroconf, option) {
+function onError(zeroconf, option, i) {
     if (option === "last-ip") zeroconf(0);
+    else if (option === "auto-connect") zeroconf(i + 1);
     return null;
 }
 
-async function loadSentry(ipaddress, zeroconf, option) {
+async function loadSentry(ipaddress, zeroconf, option, i) {
     console.log("LOADING SENTRY: " + ipaddress + " -> option: " + option);
 
     // The loadedSentry variable is needed because even when the app fails to load,
@@ -59,7 +60,7 @@ async function loadSentry(ipaddress, zeroconf, option) {
         loadedSentry = false;
         console.log("BrowserView: did-fail-load");
         mainWindow.webContents.send(channels.APP_STATE, "error");
-        return onError(zeroconf, option);
+        return onError(zeroconf, option, i);
     });
 
     appBrowserView.webContents.on("unresponsive", () => {
