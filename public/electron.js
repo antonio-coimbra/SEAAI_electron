@@ -8,7 +8,7 @@ const {
 } = require("../src/shared/constants");
 const {
     isThisSentryUserInput,
-    lastIPIsThisSentry,
+    firstIsThisSentry,
 } = require("./helpers/isThisSentry");
 const { loadSentry } = require("./helpers/loadSentry");
 const { getLastIP } = require("./helpers/storage");
@@ -57,28 +57,56 @@ ipcMain.handle(channels.AUTO_CONNECT, () => {
     } else {
         const lastIP = getLastIP();
         console.log(`lastIP: ${lastIP}`);
-        isAlive(lastIP)
-            .then((isAlive) => {
-                console.log(`lastIP ${lastIP} is available = ${isAlive}`);
-                if (isAlive) {
-                    lastIPIsThisSentry(lastIP, zeroconf).catch((err) => {
-                        console.log(
-                            `lastIP ${lastIP} isThisSentry error = ${err}`
-                        );
-                        zeroconf(0);
-                    });
-                } else {
-                    console.log(`lastIP ${lastIP} is not available 1`);
-                    zeroconf(0);
-                }
-            })
-            .catch((err) => {
-                console.log(`lastIP ${lastIP} is not available 2`);
-                zeroconf(0);
-            });
-        // zeroconf(0); // only for debugging
+        // isAlive(lastIP)
+        //     .then((isAlive) => {
+        //         console.log(`lastIP ${lastIP} is available = ${isAlive}`);
+        //         if (isAlive) {
+        //             firstIsThisSentry(lastIP, zeroconf, "last-ip").catch(
+        //                 (err) => {
+        //                     console.log(
+        //                         `lastIP ${lastIP} isThisSentry error = ${err}`
+        //                     );
+        //                     tryLocalSentry();
+        //                 }
+        //             );
+        //         } else {
+        //             console.log(`lastIP ${lastIP} is not available 1`);
+        //             tryLocalSentry();
+        //         }
+        //     })
+        //     .catch((err) => {
+        //         console.log(`lastIP ${lastIP} is not available 2`);
+        //         tryLocalSentry();
+        //     });
+        tryLocalSentry(); // only for debugging
     }
 });
+
+function tryLocalSentry() {
+    const localSentry = "sentry.local";
+    isAlive(localSentry)
+        .then((isAlive) => {
+            console.log(`${localSentry} is available = ${isAlive}`);
+            if (isAlive) {
+                firstIsThisSentry(localSentry, zeroconf, "local-sentry").catch(
+                    (err) => {
+                        console.log(
+                            `${localSentry} isThisSentry error = ${err}`
+                        );
+                        zeroconf(0);
+                    }
+                );
+            } else {
+                console.log(`${localSentry} is not available 1`);
+                zeroconf(0);
+            }
+        })
+        .catch((err) => {
+            console.log(`${localSentry} is not available 2`);
+            zeroconf(0);
+        });
+    // zeroconf(0); // only for debugging
+}
 
 // If your app has no need to navigate or only needs to navigate to known pages,
 // it is a good idea to limit navigation outright to that known scope,

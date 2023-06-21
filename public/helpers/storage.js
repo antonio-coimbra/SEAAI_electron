@@ -37,8 +37,10 @@ function getLastIP() {
 }
 
 function saveLastIP(ip) {
-    console.log(`saving last ip to ${ip}`);
-    storage.set(LAST_IP, ip);
+    if (ip !== "sentry.local") {
+        console.log(`saving last ip to ${ip}`);
+        storage.set(LAST_IP, ip);
+    }
 }
 
 function saveWindowBounds(bounds) {

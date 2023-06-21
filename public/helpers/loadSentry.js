@@ -35,12 +35,12 @@ function onSuccess(SUCCESS) {
 }
 
 function onError(zeroconf, option, i) {
-    if (option === "last-ip") zeroconf(0);
+    if (option === "last-ip" || option === "local-sentry") zeroconf(0);
     else if (option === "auto-connect") zeroconf(i + 1);
     return null;
 }
 
-async function loadSentry(ipaddress, zeroconf, option, i) {
+function loadSentry(ipaddress, zeroconf, option, i) {
     console.log("LOADING SENTRY: " + ipaddress + " -> option: " + option);
 
     // The loadedSentry variable is needed because even when the app fails to load,
@@ -71,8 +71,8 @@ async function loadSentry(ipaddress, zeroconf, option, i) {
     });
 
     const url = `http://${ipaddress}/?${Date.now()}`;
-    await appBrowserView.webContents.loadURL(url);
-    // await mainWindow.webContents.loadURL(url); // appears to be usefull because it shows more info in the dev tools
+    appBrowserView.webContents.loadURL(url);
+    // mainWindow.webContents.loadURL(url); // appears to be usefull because it shows more info in the dev tools
 }
 
 ipcMain.on(channels.ELECTRON_APP_STATE, (event, currentState) => {

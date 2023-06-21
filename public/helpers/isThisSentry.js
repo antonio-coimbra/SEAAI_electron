@@ -141,8 +141,8 @@ function recursiveIPValidator(IPs, i, zeroconf) {
     }, 10000);
 }
 
-async function lastIPIsThisSentry(lastIP, zeroconf) {
-    console.log("LastIP isThisSentry: " + lastIP);
+async function firstIsThisSentry(lastIP, zeroconf, option) {
+    console.log(option + " isThisSentry: " + lastIP);
     const ipaddress = lastIP;
     let failed = false;
     let appIsConnected = false;
@@ -152,7 +152,7 @@ async function lastIPIsThisSentry(lastIP, zeroconf) {
 
     socket.on("error", (event) => {
         if (!failed) {
-            console.log("WebSocket error on LastIP");
+            console.log("WebSocket error on " + option);
             message = event.message;
             console.log(message);
             failed = true;
@@ -169,11 +169,11 @@ async function lastIPIsThisSentry(lastIP, zeroconf) {
     socket.on("message", async (data) => {
         const message = data ? JSON.parse(data).topic : null;
         if (message === SENTRY_RESPONSE) {
-            console.log("will load LastIP");
+            console.log("will load " + option);
             appIsConnected = true;
-            return onSuccess(socket, ipaddress, zeroconf, "last-ip");
+            return onSuccess(socket, ipaddress, zeroconf, option);
         } else {
-            console.log(`lastIP didn't work`);
+            console.log(`${option} didn't work`);
             zeroconf(0);
             return false;
         }
@@ -181,7 +181,7 @@ async function lastIPIsThisSentry(lastIP, zeroconf) {
 
     setTimeout(() => {
         if (!failed && !appIsConnected) {
-            console.log(`${ipaddress} lastIP auto connect timeout`);
+            console.log(`${option} auto connect timeout`);
             failed = true;
             socket.close();
             zeroconf(0);
@@ -193,5 +193,5 @@ async function lastIPIsThisSentry(lastIP, zeroconf) {
 module.exports = {
     isThisSentryUserInput,
     isThisSentryAuto,
-    lastIPIsThisSentry,
+    firstIsThisSentry,
 };
