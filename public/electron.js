@@ -57,28 +57,28 @@ ipcMain.handle(channels.AUTO_CONNECT, () => {
     } else {
         const lastIP = getLastIP();
         console.log(`lastIP: ${lastIP}`);
-        // isAlive(lastIP)
-        //     .then((isAlive) => {
-        //         console.log(`lastIP ${lastIP} is available = ${isAlive}`);
-        //         if (isAlive) {
-        //             firstIsThisSentry(lastIP, zeroconf, "last-ip").catch(
-        //                 (err) => {
-        //                     console.log(
-        //                         `lastIP ${lastIP} isThisSentry error = ${err}`
-        //                     );
-        //                     tryLocalSentry();
-        //                 }
-        //             );
-        //         } else {
-        //             console.log(`lastIP ${lastIP} is not available 1`);
-        //             tryLocalSentry();
-        //         }
-        //     })
-        //     .catch((err) => {
-        //         console.log(`lastIP ${lastIP} is not available 2`);
-        //         tryLocalSentry();
-        //     });
-        tryLocalSentry(); // only for debugging
+        isAlive(lastIP)
+            .then((isAlive) => {
+                console.log(`lastIP ${lastIP} is available = ${isAlive}`);
+                if (isAlive) {
+                    firstIsThisSentry(lastIP, zeroconf, "last-ip").catch(
+                        (err) => {
+                            console.log(
+                                `lastIP ${lastIP} isThisSentry error = ${err}`
+                            );
+                            tryLocalSentry();
+                        }
+                    );
+                } else {
+                    console.log(`lastIP ${lastIP} is not available 1`);
+                    tryLocalSentry();
+                }
+            })
+            .catch((err) => {
+                console.log(`lastIP ${lastIP} is not available 2`);
+                tryLocalSentry();
+            });
+        // tryLocalSentry(); // only for debugging
     }
 });
 
